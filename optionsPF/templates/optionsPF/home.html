@@ -5,6 +5,11 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Home</h1>
+<form method="POST" action="/search/">
+    {% csrf_token %}
+    <input type="text" name="textfield">
+
+    <button type="submit">Upload text</button>
+</form>
 </body>
 </html>
