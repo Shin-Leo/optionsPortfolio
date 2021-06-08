@@ -1,3 +1,8 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
-# Create your models here.
+
+class Dates(models.Model):
+    date = ArrayField(
+        models.CharField(max_length=14, editable=True), size=30
+    )
