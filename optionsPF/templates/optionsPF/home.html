@@ -5,11 +5,12 @@
     <title>Home</title>
 </head>
 <body>
+<label>Enter the Stock Ticker<label>
 <form method="POST" action="/dates/">
     {% csrf_token %}
     <input type="text" name="textfield">
 
-    <button type="submit">Upload text</button>
+    <button type="submit">Submit</button>
 </form>
 </body>
 </html>

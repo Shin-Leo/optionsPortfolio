@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from .OptionsChain import *
+from django import forms
 from .models import *
 
 
@@ -17,20 +18,18 @@ def dates(request):
         user_input = request.POST.get('textfield', None)
         option_expiry_dates = get_options_expirations(user_input)
         if option_expiry_dates:
-            model_expiry_dates = Dates(3)
-            print(model_expiry_dates)
-            model_expiry_dates.save()
-            return render(request, 'optionsPF/date.html')
+            option_expiry_dates_list = list(option_expiry_dates)
+            context = {'option_expiry_dates_list': option_expiry_dates_list, 'ticker': user_input}
+            return render(request, 'optionsPF/date.html', context)
     else:
         return render(request, 'optionsPF/home.html')
 
 
 def search(request):
     if request.method == 'POST':
-        user_input = request.POST.get('textfield', None)
-        option_expiry_dates = get_options_expirations(user_input)
-        option_chain = get_option_chain(user_input, option_expiry_dates)
-        html = ("<h1>%s</h1>", option_chain)
+        ticker = request.POST.get('textfield', None)
+        date = request.POST.get('selected-date', None)
+        option_chain = get_option_chain(ticker, date)
         return HttpResponse(option_chain.to_html())
     else:
         return render(request, 'optionsPF/home.html')

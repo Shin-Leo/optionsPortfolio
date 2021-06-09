@@ -5,15 +5,19 @@
     <title>Home</title>
 </head>
 <body>
-<form method="POST" action="/search/">
-    {% csrf_token %}
-    <input type="text" name="textfield">
+<label>Enter the Stock Ticker</label>
+    <form method="POST" action="/search/">
+        {% csrf_token %}
+        <input type="text" name="textfield" value= {{ ticker }}>
 
-    <button type="submit">Upload text</button>
-</form>
-<form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Create" />
-</form>
+        <button type="submit">Submit</button>
+    <label>Select An Expiry Date</label>
+        <select id="the-id" name="selected-date">
+            {% for i in option_expiry_dates_list %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Load Options Chain</button>
+    </form>
 </body>
 </html>
