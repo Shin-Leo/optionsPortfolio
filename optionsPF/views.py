@@ -30,7 +30,15 @@ def search(request):
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
         option_chain = get_option_chain(ticker, date)
-        context = {'calls': option_chain[0], 'puts': option_chain[1]}
+        context = {'calls': option_chain[0], 'puts': option_chain[1], 'strategies': option_chain[2]}
         return render(request, 'optionsPF/chain.html', context)
     else:
         return render(request, 'optionsPF/home.html')
+
+
+def strategies(request):
+    if request.method == 'POST':
+        selected_strategy = request.POST.get('selected-strategy')
+        print(selected_strategy)
+    else:
+        return render(request, 'optionsPF/chain.html')
