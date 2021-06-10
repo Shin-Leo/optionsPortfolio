@@ -30,6 +30,6 @@ def search(request):
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
         option_chain = get_option_chain(ticker, date)
-        return HttpResponse(option_chain.to_html())
+        return HttpResponse(option_chain[0])
     else:
         return render(request, 'optionsPF/home.html')
