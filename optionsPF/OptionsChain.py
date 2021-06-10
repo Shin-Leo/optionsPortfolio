@@ -1,5 +1,6 @@
 import yfinance as yf
 import pandas as pd
+import html
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
@@ -15,12 +16,17 @@ def get_option_chain(ticker, date):
     stock = yf.Ticker(ticker)
     option_chain = pd.DataFrame(data=stock.option_chain(date), dtype=object)
     calls = option_chain.at[0,0]
-    puts = option_chain.at[1,0]
-    html_calls = calls.to_html()
-    html_puts = puts.to_html()
+    filtered_calls = calls.drop(['contractSymbol', 'lastTradeDate', 'change', 'lastPrice',
+               'percentChange', 'inTheMoney', 'contractSize', 'currency'], axis=1)
+    puts = option_chain.at[1, 0]
+    filtered_puts = puts.drop(['contractSymbol', 'lastTradeDate', 'change', 'lastPrice',
+              'percentChange', 'inTheMoney', 'contractSize', 'currency'], axis=1)
+    filtered_calls.set_index('strike', inplace=True)
+    filtered_puts.set_index('strike', inplace=True)
+    html_calls = filtered_calls.to_html()
+    html_puts = filtered_puts.to_html()
     call_put = [html_calls, html_puts]
     return call_put
 
 
 
-x = get_option_chain('aapl', '2021-06-11')

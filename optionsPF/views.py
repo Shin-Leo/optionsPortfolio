@@ -30,6 +30,7 @@ def search(request):
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
         option_chain = get_option_chain(ticker, date)
-        return HttpResponse(option_chain[0])
+        context = {'calls': option_chain[0], 'puts': option_chain[1]}
+        return render(request, 'optionsPF/chain.html', context)
     else:
         return render(request, 'optionsPF/home.html')
