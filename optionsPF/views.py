@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
-from .OptionsChain import *
+from .options_chain import *
 from django import forms
 from .models import *
 
@@ -30,7 +30,9 @@ def search(request):
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
         option_chain = get_option_chain(ticker, date)
-        context = {'calls': option_chain[0], 'puts': option_chain[1], 'strategies': option_chain[2]}
+        stock_price = str(get_stock_price(ticker))
+        context = {'calls': option_chain[0], 'puts': option_chain[1],
+                   'strategies': option_chain[2], 'price': stock_price}
         return render(request, 'optionsPF/chain.html', context)
     else:
         return render(request, 'optionsPF/home.html')

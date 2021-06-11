@@ -1,6 +1,9 @@
+import datetime
+
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import math
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -31,7 +34,7 @@ def get_option_chain(ticker, date):
     filtered_puts.replace(np.NaN, 0, inplace=True)
 
     filtered_calls = filtered_calls.astype({'strike': np.int32, 'volume': np.int32, 'openInterest': np.int32})
-    filtered_calls = filtered_calls.astype({'strike': np.int32, 'volume': np.int32, 'openInterest': np.int32})
+    filtered_puts = filtered_puts.astype({'strike': np.int32, 'volume': np.int32, 'openInterest': np.int32})
 
     rounded_calls = filtered_calls.round({'bid': 2, 'ask': 2, 'impliedVolatility': 2})
     rounded_puts = filtered_puts.round({'bid': 2, 'ask': 2, 'impliedVolatility': 2})
@@ -41,3 +44,45 @@ def get_option_chain(ticker, date):
 
     call_put = [call_values, put_values, options_strategies]
     return call_put
+
+
+def get_stock_price(ticker):
+    date_time = datetime.datetime.now()
+    time = date_time.time().strftime("%H:%M")
+    str_date_time = '{:%Y/%m/%d %H:%M:%S}'.format(date_time)
+    date = date_time.date()
+    data = yf.download(ticker, start=date, interval="15m")
+    string_time = data.index.astype(str).str[11:16]
+    interval = choose_stock_interval(time, string_time)
+    price_param = '{:%Y/%m/%d }'.format(date_time) + interval + '-04:00'
+    # make function to determine Open or close
+    price = round(data.at[price_param, 'Open'], 2)
+    return price
+
+
+def choose_stock_interval(time, times_column):
+    current_hour = int(time.split(':')[0])
+    current_mins = int(time.split(':')[1])
+    if current_hour >= 16 or current_hour <= 8:
+        return times_column[len(times_column)-1]
+    else:
+        for interval in times_column:
+            hour = int(interval.split(':')[0])
+            mins = int(interval.split(':')[1])
+            if current_hour == hour and round_down(current_mins) == mins:
+                return interval
+
+
+def round_down(mins):
+    if mins <= 16:
+        return 0
+    elif mins <= 31:
+        return 15
+    elif mins <= 46:
+        return 30
+    else:
+        return 45
+
+
+
+get_stock_price("MSFT")
