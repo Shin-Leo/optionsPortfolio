@@ -3,7 +3,9 @@ import datetime
 import yfinance as yf
 import pandas as pd
 import numpy as np
+from pytz import timezone
 import math
+
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -47,7 +49,8 @@ def get_option_chain(ticker, date):
 
 
 def get_stock_price(ticker):
-    date_time = datetime.datetime.now()
+    eastern = timezone('US/Eastern')
+    date_time = datetime.datetime.now(eastern)
     time = date_time.time().strftime("%H:%M")
     str_date_time = '{:%Y/%m/%d %H:%M:%S}'.format(date_time)
     date = date_time.date()
@@ -56,12 +59,13 @@ def get_stock_price(ticker):
     interval = choose_stock_interval(time, string_time)
     price_param = '{:%Y/%m/%d }'.format(date_time) + interval + '-04:00'
     # make function to determine Open or close
-    price = round(data.at[price_param, 'Open'], 2)
+    price = np.round(data.at[price_param, 'Open'], 2)
     return price
 
 
 def choose_stock_interval(time, times_column):
     current_hour = int(time.split(':')[0])
+    print(current_hour)
     current_mins = int(time.split(':')[1])
     if current_hour >= 16 or current_hour <= 8:
         return times_column[len(times_column)-1]
@@ -82,7 +86,3 @@ def round_down(mins):
         return 30
     else:
         return 45
-
-
-
-get_stock_price("MSFT")
