@@ -40,5 +40,6 @@ def strategies(request):
     if request.method == 'POST':
         selected_strategy = request.POST.get('selected-strategy')
         print(selected_strategy)
+        return render(request, 'optionsPF/covered_call.html')
     else:
         return render(request, 'optionsPF/chain.html')

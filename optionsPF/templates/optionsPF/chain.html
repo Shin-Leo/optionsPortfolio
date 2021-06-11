@@ -15,7 +15,43 @@
         </select>
         <button type="submit">Submit</button>
     </form>
-{{ calls|safe }}
-{{ puts|safe }}
+    <table style="float: left;">
+        <thead>
+        <tr>
+            <th>Strike</th>
+            <th>Bid</th>
+            <th>Ask</th>
+            <th>Volume</th>
+            <th>Open Int.</th>
+            <th>Implied Volatility</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in calls %}
+            <tr> {% for j in i %}
+                <td>{{ j }}</td>
+                {% endfor %}</tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table style="float: left;">
+        <thead>
+        <tr>
+            <th>Strike</th>
+            <th>Bid</th>
+            <th>Ask</th>
+            <th>Volume</th>
+            <th>Open Int.</th>
+            <th>Implied Volatility</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in puts %}
+            <tr> {% for j in i %}
+                <td>{{ j }}</td>
+                {% endfor %}</tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
