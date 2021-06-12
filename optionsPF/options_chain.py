@@ -65,7 +65,6 @@ def get_stock_price(ticker):
 
 def choose_stock_interval(time, times_column):
     current_hour = int(time.split(':')[0])
-    print(current_hour)
     current_mins = int(time.split(':')[1])
     if current_hour >= 16 or current_hour <= 8:
         return times_column[len(times_column)-1]

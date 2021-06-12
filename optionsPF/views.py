@@ -19,7 +19,8 @@ def dates(request):
         option_expiry_dates = get_options_expirations(user_input)
         if option_expiry_dates:
             option_expiry_dates_list = list(option_expiry_dates)
-            context = {'option_expiry_dates_list': option_expiry_dates_list, 'ticker': user_input}
+            context = {'option_expiry_dates_list': option_expiry_dates_list,
+                       'ticker': user_input, 'strategies': options_strategies}
             return render(request, 'optionsPF/date.html', context)
     else:
         return render(request, 'optionsPF/home.html')
@@ -29,19 +30,16 @@ def search(request):
     if request.method == 'POST':
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
+        strategy = request.POST.get('selected-strategy', None)
         option_chain = get_option_chain(ticker, date)
-        stock_price = str(get_stock_price(ticker))
+        stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
                    'strategies': option_chain[2], 'price': stock_price}
-        return render(request, 'optionsPF/chain.html', context)
+        print(strategy)
+        if strategy == 'Covered Call':
+            return render(request, 'optionsPF/covered_call.html', context)
+        else:
+            return render(request, 'optionsPF/date.html')
     else:
         return render(request, 'optionsPF/home.html')
 
-
-def strategies(request):
-    if request.method == 'POST':
-        selected_strategy = request.POST.get('selected-strategy')
-        print(selected_strategy)
-        return render(request, 'optionsPF/covered_call.html')
-    else:
-        return render(request, 'optionsPF/chain.html')

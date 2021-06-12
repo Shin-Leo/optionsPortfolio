@@ -5,19 +5,24 @@
     <title>Home</title>
 </head>
 <body>
-<label>Enter the Stock Ticker</label>
+<label>Enter a Stock Ticker</label>
     <form method="POST" action="/search/">
         {% csrf_token %}
         <input type="text" name="textfield" value= {{ ticker }}>
-
-        <button type="submit">Submit</button>
     <label>Select An Expiry Date</label>
         <select id="the-id" name="selected-date">
             {% for i in option_expiry_dates_list %}
                 <option value="{{ i }}">{{ i }}</option>
             {% endfor %}
         </select>
-        <button type="submit">Load Options Chain</button>
+                <label>Select an Options Strategy</label>
+            {% csrf_token %}
+        <select id="the-id" name="selected-strategy">
+            {% for i in strategies %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>
