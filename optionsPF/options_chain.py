@@ -1,3 +1,4 @@
+from datetime import timedelta
 import datetime
 
 import yfinance as yf
@@ -51,14 +52,24 @@ def get_option_chain(ticker, date):
 def get_stock_price(ticker):
     eastern = timezone('US/Eastern')
     date_time = datetime.datetime.now(eastern)
+    week_number = date_time.weekday()
     time = date_time.time().strftime("%H:%M")
     str_date_time = '{:%Y/%m/%d %H:%M:%S}'.format(date_time)
-    date = date_time.date()
-    data = yf.download(ticker, start=date, interval="15m")
+    retrieved_date = date_time.date
+    if week_number == 5:
+        date_time = date_time.date() - timedelta(days=1)
+        retrieved_date = date_time
+    elif week_number == 6:
+        date_time = date_time.date() - timedelta(days=2)
+        retrieved_date = date_time
+    print(date_time)
+    print(retrieved_date)
+    data = yf.download(ticker, start=retrieved_date, interval="15m")
     string_time = data.index.astype(str).str[11:16]
     interval = choose_stock_interval(time, string_time)
     price_param = '{:%Y/%m/%d }'.format(date_time) + interval + '-04:00'
     # make function to determine Open or close
+    print(price_param)
     price = np.round(data.at[price_param, 'Open'], 2)
     return price
 
@@ -66,6 +77,7 @@ def get_stock_price(ticker):
 def choose_stock_interval(time, times_column):
     current_hour = int(time.split(':')[0])
     current_mins = int(time.split(':')[1])
+    print(times_column)
     if current_hour >= 16 or current_hour <= 8:
         return times_column[len(times_column)-1]
     else:

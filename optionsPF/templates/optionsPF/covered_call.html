@@ -6,9 +6,10 @@
 </head>
 <body>
     <form method="POST" action="/strategy/">
-
-        <label>The stock price is <b>{{ price }}</b></label>
-    </form>
+    <div class="form-group form-inline">
+        <label>The stock price is &nbsp <b>{{ price }} &nbsp &nbsp </b></label>
+        <label> Select a Strike Price For Your Call &nbsp &nbsp</label><input type="text" name="strike-price">
+    </div>
     <table style="float: left;">
         <thead>
         <tr>
@@ -61,5 +62,6 @@
         {% endfor %}
         </tbody>
     </table>
+        </form>
 </body>
 </html>
