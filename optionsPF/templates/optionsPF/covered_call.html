@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +6,19 @@
     <title>Title</title>
 </head>
 <body>
-    <form method="POST" action="/strategy/">
+<script src="/static/optionsPF/script.js"> </script>
+
+    <form method="POST" action="/covered_call/">
+    {% csrf_token %}
     <div class="form-group form-inline">
         <label>The stock price is &nbsp <b>{{ price }} &nbsp &nbsp </b></label>
-        <label> Select a Strike Price For Your Call &nbsp &nbsp</label><input type="text" name="strike-price">
+        <label> Select a Strike Price For Your Call &nbsp &nbsp</label>
+        <label>
+            <input type="text" name="strike-price" class="strikeClass">
+        </label>
+        <button type="submit" onclick="bid_ask({{ calls }})">Submit</button>
     </div>
-    <table style="float: left;">
+    <table style="float: left;" id="call-table">
         <thead>
         <tr>
             <th>&nbsp;</th>
@@ -21,7 +29,7 @@
         </tr>
         <tr>
             <th>Strike</th>
-            <th>Bid</th>
+            <th>Bid</th
             <th>Ask</th>
             <th>Volume</th>
             <th>Open Int.</th>
@@ -36,7 +44,8 @@
         {% endfor %}
         </tbody>
     </table>
-    <table style="float: left;">
+    </div>
+    <table style="float: left;" id="put-table">
         <thead>
         <tr>
             <th>&nbsp;</th>

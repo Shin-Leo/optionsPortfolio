@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 from .options_chain import *
 from django import forms
@@ -35,11 +35,22 @@ def search(request):
         stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
                    'strategies': option_chain[2], 'price': stock_price}
-        print(strategy)
         if strategy == 'Covered Call':
             return render(request, 'optionsPF/covered_call.html', context)
         else:
             return render(request, 'optionsPF/date.html')
     else:
         return render(request, 'optionsPF/home.html')
+
+
+def covered_call(request):
+    if request.method == 'POST':
+        strike = request.POST.get('strike-price')
+        call_table = request.POST.get('call-table')
+        print(strike)
+        print(call_table)
+        return redirect(request.META['HTTP_REFERER'])
+    else:
+        return render(request, 'optionsPF/covered_call.html')
+
 
