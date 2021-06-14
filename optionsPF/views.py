@@ -46,8 +46,11 @@ def search(request):
 
 def covered_call(request):
     if request.method == 'GET':
+        print(request.GET)
+        last_price = request.GET.get('result[last_price]')
         bid = request.GET.get('result[bid]')
-        ask = request.GET.get('result[bid]')
+        ask = request.GET.get('result[ask]')
+        print(last_price)
         print(bid)
         print(ask)
         return HttpResponse('')

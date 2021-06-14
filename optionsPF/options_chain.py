@@ -28,10 +28,10 @@ def get_option_chain(ticker, date):
     stock = yf.Ticker(ticker)
     option_chain = pd.DataFrame(data=stock.option_chain(date))
     calls = option_chain.at[0, 0]
-    filtered_calls = calls.drop(['contractSymbol', 'lastTradeDate', 'change', 'lastPrice',
+    filtered_calls = calls.drop(['contractSymbol', 'lastTradeDate', 'change',
                                  'percentChange', 'inTheMoney', 'contractSize', 'currency'], axis=1)
     puts = option_chain.at[1, 0]
-    filtered_puts = puts.drop(['contractSymbol', 'lastTradeDate', 'change', 'lastPrice',
+    filtered_puts = puts.drop(['contractSymbol', 'lastTradeDate', 'change',
                                'percentChange', 'inTheMoney', 'contractSize', 'currency'], axis=1)
     filtered_calls.replace(np.NaN, 0, inplace=True)
     filtered_puts.replace(np.NaN, 0, inplace=True)
@@ -98,6 +98,3 @@ def round_down(mins):
         return 30
     else:
         return 45
-
-
-get_stock_price("MSFT")
