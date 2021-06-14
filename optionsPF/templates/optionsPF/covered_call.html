@@ -11,17 +11,20 @@
     <script src="/static/optionsPF/script.js"> </script>
 </head>
 <body>
+<form action="/covered_call/" method="post">
+    {% csrf_token %}
     <div data-url="{% url 'get-covered-call' %}" class="url-covered-call"> </div>
     <input type="hidden" name="selected-strategy" value={{ strategy|safe }}>
     <input type="hidden" name="selected-ticker" value={{ ticker }}>
     <input type="hidden" name="selected-expiry" value={{ date }}>
+    <input type="hidden" id="selected-last-price" name="last-price" value=0>
     <div class="form-group form-inline">
         <label>The stock price is &nbsp <b>{{ price }} &nbsp &nbsp </b></label>
         <label> Select a Strike Price For Your Call &nbsp &nbsp</label>
         <label>
             <input type="text" name="strike-price" class="strikeClass">
         </label>
-        <button type="button" onclick="bid_ask()">Submit</button>
+        <button type="submit" onclick="get_last_price()">Submit</button>
     </div>
     <table style="float: left;" class="call-table">
         <thead>
@@ -78,5 +81,6 @@
         {% endfor %}
         </tbody>
     </table>
+</form>
 </body>
 </html>
