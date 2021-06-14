@@ -32,11 +32,13 @@ def search(request):
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
         strategy = request.POST.get('selected-strategy', None)
+        strategy = strategy.replace(" ", "-")
         option_chain = get_option_chain(ticker, date)
         stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
-                   'strategies': option_chain[2], 'price': stock_price}
-        if strategy == 'Covered Call':
+                   'strategies': option_chain[2], 'price': stock_price,
+                   'strategy': strategy, 'ticker': ticker, 'date': date}
+        if strategy == 'Covered-Call':
             return render(request, 'optionsPF/covered_call.html', context)
         else:
             return render(request, 'optionsPF/date.html')
@@ -47,16 +49,17 @@ def search(request):
 def covered_call(request):
     if request.method == 'GET':
         print(request.GET)
+        strike = request.GET.get('result[strike]')
         last_price = request.GET.get('result[last_price]')
         bid = request.GET.get('result[bid]')
         ask = request.GET.get('result[ask]')
-        print(last_price)
-        print(bid)
-        print(ask)
-        return HttpResponse('')
-    if request.method == 'POST':
-        strike = request.POST.get('strike-price')
-        print(strike)
+        strategy = request.GET.get('result[strategy]')
+        ticker = request.GET.get('result[ticker]')
+        num_contracts = 1
+        date = request.GET.get('result[date]')
+        print(date)
+        contract = CoveredCall.objects.create(strike=strike, contract_price=last_price, expiry_date=date, num_contracts=num_contracts, ticker=ticker, strategy_name=strategy)
+        print(contract)
         return HttpResponse('')
     else:
         return render(request, 'optionsPF/covered_call.html')

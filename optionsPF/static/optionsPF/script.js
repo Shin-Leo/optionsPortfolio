@@ -8,11 +8,20 @@ function bid_ask() {
             let last_price = document.querySelector("body > form > table.call-table > tbody > tr:nth-child(" + i + ") > td:nth-child(2)").childNodes[0].data
             let bid = document.querySelector("body > form > table.call-table > tbody > tr:nth-child(" + i + ") > td:nth-child(3)").childNodes[0].data
             let ask = document.querySelector("body > form > table.call-table > tbody > tr:nth-child(" + i + ") > td:nth-child(4)").childNodes[0].data
+            let strategy = document.querySelector("body > input[type=hidden]:nth-child(2)").attributes[2].value
+            let ticker = document.querySelector("body > input[type=hidden]:nth-child(3)").attributes[2].value
+            let date = document.querySelector("body > input[type=hidden]:nth-child(4)").attributes[2].value
+            console.log(strategy)
+            console.log(ticker)
+            console.log(date)
             result = {
                 strike: selected_strike,
                 last_price: last_price,
                 bid: bid,
-                ask: ask
+                ask: ask,
+                strategy: strategy,
+                ticker: ticker,
+                date: date,
             }
         }
     }
