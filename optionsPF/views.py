@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 from .options_chain import *
 from django import forms
+import pdb
 from .models import *
 
 
@@ -44,12 +45,16 @@ def search(request):
 
 
 def covered_call(request):
+    if request.method == 'GET':
+        bid = request.GET.get('result[bid]')
+        ask = request.GET.get('result[bid]')
+        print(bid)
+        print(ask)
+        return HttpResponse('')
     if request.method == 'POST':
         strike = request.POST.get('strike-price')
-        call_table = request.POST.get('call-table')
         print(strike)
-        print(call_table)
-        return redirect(request.META['HTTP_REFERER'])
+        return HttpResponse('')
     else:
         return render(request, 'optionsPF/covered_call.html')
 

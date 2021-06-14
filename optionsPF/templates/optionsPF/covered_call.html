@@ -4,10 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+    <script src="/static/optionsPF/script.js"> </script>
+    <div data-url="{% url 'get-covered-call' %}" class="url-covered-call"> </div>
 </head>
 <body>
-<script src="/static/optionsPF/script.js"> </script>
-
     <form method="POST" action="/covered_call/">
     {% csrf_token %}
     <div class="form-group form-inline">
@@ -16,9 +20,9 @@
         <label>
             <input type="text" name="strike-price" class="strikeClass">
         </label>
-        <button type="submit" onclick="bid_ask({{ calls }})">Submit</button>
+        <button type="submit" onclick="bid_ask()">Submit</button>
     </div>
-    <table style="float: left;" id="call-table">
+    <table style="float: left;" class="call-table">
         <thead>
         <tr>
             <th>&nbsp;</th>
@@ -29,7 +33,7 @@
         </tr>
         <tr>
             <th>Strike</th>
-            <th>Bid</th
+            <th>Bid</th>
             <th>Ask</th>
             <th>Volume</th>
             <th>Open Int.</th>
