@@ -49,7 +49,6 @@ def search(request):
 
 def covered_call(request):
     if request.method == 'POST':
-        print(request.POST)
         strike = request.POST.get('strike-price')
         last_price = request.POST.get('last-price')
         strategy = request.POST.get('selected-strategy')
@@ -58,8 +57,9 @@ def covered_call(request):
         date = request.POST.get('selected-expiry')
         contract = CoveredCall.objects.create(strike=strike, contract_price=last_price, expiry_date=date,
                                               num_contracts=num_contracts, ticker=ticker, strategy_name=strategy)
-        print(contract)
-        return HttpResponse('')
+        contract.save()
+        contract_attributes = contract.return_attributes()
+        return render(request, 'optionsPF/success.html', contract_attributes)
     else:
         return render(request, 'optionsPF/covered_call.html')
 

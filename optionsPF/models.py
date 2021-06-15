@@ -16,3 +16,8 @@ class Strategy(models.Model):
 
 class CoveredCall(Strategy):
     strategy_name = models.CharField(max_length=20)
+
+    def return_attributes(self):
+        attributes = {"strike": self.strike, "contract_price": self.contract_price, "expiry_date": self.expiry_date,
+                      "num_contracts": self.num_contracts, "ticker": self.ticker, "strategy": self.strategy_name}
+        return attributes
