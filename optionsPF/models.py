@@ -16,19 +16,13 @@ class User(models.Model):
     )
 
 
-class Strategy(models.Model):
-    id = models.ForeignKey(Portfolio, default=models.BigAutoField(), on_delete=models.SET_DEFAULT, primary_key=True)
+class CoveredCall(models.Model):
+    id = models.BigAutoField(primary_key=True)
     strike = models.PositiveIntegerField()
     contract_price = models.DecimalField(max_digits=10, decimal_places=2)
     expiry_date = DateTimeField()
     num_contracts = models.PositiveIntegerField()
     ticker = models.CharField(max_length=5)
-
-    class Meta:
-        abstract = True
-
-
-class CoveredCall(Strategy):
     strategy_name = models.CharField(max_length=20)
 
     def return_attributes(self):
