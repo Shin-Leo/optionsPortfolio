@@ -4,7 +4,9 @@ import datetime
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import pytz
 from pytz import timezone
+from django.utils.timezone import make_aware
 import math
 
 
@@ -51,7 +53,8 @@ def get_option_chain(ticker, date):
 
 def get_stock_price(ticker):
     eastern = timezone('US/Eastern')
-    date_time = datetime.datetime.now(eastern)
+    date_time = datetime.datetime.now(tz=eastern)
+    print(date_time)
     week_number = date_time.weekday()
     time = date_time.time().strftime("%H:%M")
     hour = date_time.time().strftime("%H")
@@ -63,16 +66,22 @@ def get_stock_price(ticker):
     elif week_number == 6:
         date_time = date_time.date() - timedelta(days=2)
         retrieved_date = date_time
-    elif week_number == 0 and (int(hour) < 9 and int(mins) < 35) or int(hour) < 10:
+    elif week_number == 0 and ((int(hour) < 9 and int(mins) < 35) or int(hour) < 10):
         date_time = date_time.date() - timedelta(days=3)
         retrieved_date = date_time
-    print(retrieved_date)
+    elif (int(hour) < 9 and int(mins)) < 35 or int(hour) < 10:
+        date_time = date_time.date() - timedelta(days=1)
+        retrieved_date = date_time
+        time = "16:00"
+        hour = "16"
     data = yf.download(ticker, start=retrieved_date, interval="15m")
     string_time = data.index.astype(str).str[11:16]
     interval = choose_stock_interval(time, string_time)
     price_param = '{:%Y/%m/%d }'.format(date_time) + interval + '-04:00'
-    # make function to determine Open or close
-    price = np.round(data.at[price_param, 'Open'], 2)
+    if int(hour) >= 16:
+        price = np.round(data.at[price_param, 'Close'], 2)
+    else:
+        price = np.round(data.at[price_param, 'Open'], 2)
     return price
 
 
@@ -80,6 +89,7 @@ def choose_stock_interval(time, times_column):
     current_hour = int(time.split(':')[0])
     current_mins = int(time.split(':')[1])
     if current_hour >= 16 or current_hour <= 8:
+        print(times_column)
         return times_column[len(times_column)-1]
     else:
         for interval in times_column:

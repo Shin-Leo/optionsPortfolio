@@ -34,6 +34,7 @@ def search(request):
         strategy = request.POST.get('selected-strategy', None)
         strategy = strategy.replace(" ", "-")
         option_chain = get_option_chain(ticker, date)
+        print(get_stock_price(ticker))
         stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
                    'strategies': option_chain[2], 'price': stock_price,
@@ -54,9 +55,10 @@ def covered_call(request):
         strategy = request.POST.get('selected-strategy')
         ticker = request.POST.get('selected-ticker')
         num_contracts = 1
-        date = request.GET.get('selected-expiry')
-        # contract = CoveredCall.objects.create(strike=strike, contract_price=last_price, expiry_date=date, num_contracts=num_contracts, ticker=ticker, strategy_name=strategy)
-        # print(contract)
+        date = request.POST.get('selected-expiry')
+        contract = CoveredCall.objects.create(strike=strike, contract_price=last_price, expiry_date=date,
+                                              num_contracts=num_contracts, ticker=ticker, strategy_name=strategy)
+        print(contract)
         return HttpResponse('')
     else:
         return render(request, 'optionsPF/covered_call.html')
