@@ -1,9 +1,23 @@
 from django.db import models
-from django.db.models import DateTimeField
+from django.db.models import DateTimeField, JSONField
+
+
+class Portfolio(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    strategies = JSONField()
+
+
+class User(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    portfolio = models.OneToOneField(
+        Portfolio,
+        on_delete=models.CASCADE,
+        primary_key=False
+    )
 
 
 class Strategy(models.Model):
-    id = models.BigAutoField(primary_key=True)
+    id = models.ForeignKey(Portfolio, default=models.BigAutoField(), on_delete=models.SET_DEFAULT, primary_key=True)
     strike = models.PositiveIntegerField()
     contract_price = models.DecimalField(max_digits=10, decimal_places=2)
     expiry_date = DateTimeField()
@@ -21,3 +35,7 @@ class CoveredCall(Strategy):
         attributes = {"strike": self.strike, "contract_price": self.contract_price, "expiry_date": self.expiry_date,
                       "num_contracts": self.num_contracts, "ticker": self.ticker, "strategy": self.strategy_name}
         return attributes
+
+
+
+
