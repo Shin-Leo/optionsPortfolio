@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 from .options_chain import *
@@ -17,12 +19,21 @@ def about(request):
 def dates(request):
     if request.method == 'POST':
         user_input = request.POST.get('textfield', None)
-        option_expiry_dates = get_options_expirations(user_input)
-        if option_expiry_dates:
-            option_expiry_dates_list = list(option_expiry_dates)
-            context = {'option_expiry_dates_list': option_expiry_dates_list,
-                       'ticker': user_input, 'strategies': options_strategies}
-            return render(request, 'optionsPF/date.html', context)
+        if ',' not in user_input:
+            if len(user_input) != 0 and len(user_input) < 5:
+                option_expiry_dates = get_options_expirations(user_input)
+                print(option_expiry_dates)
+                if option_expiry_dates:
+                    option_expiry_dates_list = list(option_expiry_dates)
+                    context = {'option_expiry_dates_list': option_expiry_dates_list,
+                               'ticker': user_input, 'strategies': options_strategies}
+                    return render(request, 'optionsPF/date.html', context)
+            else:
+                messages.info(request, "Enter a Valid Stock Ticker")
+                return render(request, 'optionsPF/home.html')
+        else:
+            messages.info(request, "Enter a Single Stock Ticker")
+            return render(request, 'optionsPF/home.html')
     else:
         return render(request, 'optionsPF/home.html')
 
@@ -62,5 +73,3 @@ def covered_call(request):
         return render(request, 'optionsPF/success.html', contract_attributes)
     else:
         return render(request, 'optionsPF/covered_call.html')
-
-
