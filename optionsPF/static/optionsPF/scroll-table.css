@@ -46,3 +46,7 @@ th, td {
     clear: both;
     display: table;
 }
+
+.label-as-badge {
+    border-radius: 1em;
+}

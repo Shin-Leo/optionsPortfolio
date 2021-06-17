@@ -29,11 +29,10 @@ def get_option_chain(ticker, date):
     np.set_printoptions(suppress=True)
 
     stock = yf.Ticker(ticker)
-    option_chain = pd.DataFrame(data=stock.option_chain(date))
-    calls = option_chain.at[0, 0]
+    calls = stock.option_chain(date).calls
     filtered_calls = calls.drop(['contractSymbol', 'lastTradeDate', 'change',
                                  'percentChange', 'inTheMoney', 'contractSize', 'currency'], axis=1)
-    puts = option_chain.at[1, 0]
+    puts = stock.option_chain(date).puts
     filtered_puts = puts.drop(['contractSymbol', 'lastTradeDate', 'change',
                                'percentChange', 'inTheMoney', 'contractSize', 'currency'], axis=1)
     filtered_calls.replace(np.NaN, 0, inplace=True)
@@ -69,11 +68,11 @@ def get_stock_price(ticker):
     elif week_number == 0 and ((int(hour) < 9 and int(mins) < 35) or int(hour) < 10):
         date_time = date_time.date() - timedelta(days=3)
         retrieved_date = date_time
-    elif (int(hour) < 9 and int(mins)) < 35 or int(hour) < 10:
+    elif (int(hour) < 9 and int(mins) < 35) or int(hour) < 10:
         date_time = date_time.date() - timedelta(days=1)
         retrieved_date = date_time
         time = "15:45"
-    data = yf.download(ticker, start=date_time, interval="15m")
+    data = yf.download(ticker, start=retrieved_date, interval="15m")
     string_time = data.index.astype(str).str[11:16]
     interval = choose_stock_interval(time, string_time)
     price_param = '{:%Y/%m/%d }'.format(retrieved_date) + interval + '-04:00'
@@ -92,6 +91,7 @@ def choose_stock_interval(time, times_column):
         mins = int(interval.split(':')[1])
         if current_hour == hour and round_down(current_mins) == mins:
             return interval
+    return '16:00'
 
 
 def round_down(mins):

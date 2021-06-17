@@ -12,7 +12,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/optionsPF/scroll-table.css">
-
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 </head>
 <body>
 <form action="/covered_call/" method="post">
@@ -23,13 +25,12 @@
     <input type="hidden" name="selected-expiry" value={{ date }}>
     <input type="hidden" id="selected-last-price" name="last-price" value=0>
     <div class="form-group form-inline">
-
-
-     <h4>The stock price is <span class="badge badge-pill badge-success">{{ price }}</span> </h4>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">Select a Strike Price For Your Call</span>
-      <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1" name="textfield">
-    </div>
+        <h4>The stock price is <span class="label label-pill label-success">{{ price }}</span></h4>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Select a Strike Price For Your Call</span>
+            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
+                   name="textfield">
+        </div>
         <button type="submit" class="btn btn-secondary" onclick="get_last_price()">Submit</button>
     </div>
     <div class="row">
