@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
+import datetime
 from .options_chain import *
 from django import forms
 import pdb
@@ -65,9 +66,13 @@ def butterfly(request):
         strategy = request.POST.get('selected-strategy')
         ticker = request.POST.get('selected-ticker')
         num_contracts = 1
-        date = request.POST.get('selected-expiry')
-        contract = Butterfly.objects.create(strike=strike, contract_price=last_price, expiry_date=date,
-                                            num_contracts=num_contracts, ticker=ticker, strategy_name=strategy)
+        expiry_date = request.POST.get('selected-expiry')
+        eastern = timezone('US/Eastern')
+        purchase_date = datetime.datetime.now(tz=eastern).date()
+
+        contract = ButterflySpread.objects.create(strike=strike, contract_price=last_price, purchase_date=purchase_date,
+                                            expiry_date=expiry_date, num_contracts=num_contracts, ticker=ticker,
+                                            strategy_name=strategy)
         contract.save()
         contract_attributes = contract.return_attributes()
         return render(request, 'optionsPF/success.html', contract_attributes)

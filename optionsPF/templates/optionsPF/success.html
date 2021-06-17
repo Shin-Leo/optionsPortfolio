@@ -9,16 +9,18 @@
         <table class="contract-table">
             <thead>
             <th>Strike</th>
-            <th>Last Price</th>
-            <th>Bid</th>
-            <th>Ask</th>
-            <th>Volume</th>
-            <th>Open Int.</th>
+            <th>Purchase Price</th>
+            <th>Purchase Date</th>
+            <th>Expiry Date</th>
+            <th>Contract Size</th>
+            <th>Ticker</th>
+            <th>Strategy</th>
             </thead>
         <tbody>
         <tr>
             <td>{{ strike }}</td>
             <td>{{ contract_price }}</td>
+            <td>{{ purchase_date }}</td>
             <td>{{ expiry_date }}</td>
             <td>{{ num_contracts }}</td>
             <td>{{ ticker }}</td>
