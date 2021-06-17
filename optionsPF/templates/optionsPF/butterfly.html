@@ -17,9 +17,9 @@
         crossorigin="anonymous"></script>
 </head>
 <body>
-<form action="/covered_call/" method="post">
+<form action="/butterfly/" method="post">
     {% csrf_token %}
-    <div data-url="{% url 'get-covered-call' %}" class="url-covered-call"></div>
+    <div data-url="{% url 'get-butterfly' %}" class="url-butterfly"></div>
     <input type="hidden" name="selected-strategy" value={{ strategy|safe }}>
     <input type="hidden" name="selected-ticker" value={{ ticker }}>
     <input type="hidden" name="selected-expiry" value={{ date }}>
@@ -29,7 +29,7 @@
         <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">Select a Strike Price For Your Call</span>
             <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
-                   name="textfield">
+                   name="strike-price" id="strikeId">
         </div>
         <button type="submit" class="btn btn-secondary" onclick="get_last_price()">Submit</button>
     </div>

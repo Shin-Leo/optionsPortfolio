@@ -16,7 +16,7 @@ class User(models.Model):
     )
 
 
-class CoveredCall(models.Model):
+class Butterfly(models.Model):
     id = models.BigAutoField(primary_key=True)
     strike = models.PositiveIntegerField()
     contract_price = models.DecimalField(max_digits=10, decimal_places=2)

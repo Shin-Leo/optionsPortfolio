@@ -12,8 +12,8 @@ urlpatterns = [
     path('about/', views.about, name='portfolio-about'),
     path('search/', views.search, name='portfolio-search'),
     path('dates/', views.dates, name='portfolio-dates'),
-    path('covered_call/', views.covered_call, name='portfolio-covered-call'),
-    url(r'^covered_call$', views.covered_call, name='get-covered-call'),
+    path('butterfly/', views.butterfly, name='portfolio-butterfly'),
+    url(r'^butterfly$', views.butterfly, name='get-butterfly'),
 ]
 
 if settings.DEBUG:
