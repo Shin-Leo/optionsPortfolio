@@ -15,8 +15,9 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', None)
 
-options_strategies = ['Covered Call', 'Married Put', 'Bull Call Spread', 'Bear Put Spread', 'Protective Collar',
-                      'Long Straddle', 'Long Strangle', 'Long Call Butterfly Spread', 'Iron Condor', 'Iron Butterfly']
+options_strategies = ['Butterfly', 'Unbalanced Butterfly', 'Bull Call Spread', 'Bear Put Spread', 'Protective Collar',
+                      'Long Straddle', 'Long Strangle', 'Long Call Butterfly Spread', 'Iron Condor', 'Iron Butterfly',
+                      'Risk Reversal', 'Box', 'Straddle', 'Strangle', 'Vertical Spread', ]
 
 
 def get_options_expirations(ticker):

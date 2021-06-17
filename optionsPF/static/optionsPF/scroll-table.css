@@ -1,0 +1,48 @@
+* {
+    box-sizing: border-box;
+}
+
+#scroll-table {
+    overflow-y: scroll;
+    height: 500px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 50%;
+    border: 1px solid #ddd;
+}
+
+.table-header {
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    height: 70px;
+    background: #eee;
+}
+
+.table-header1 {
+    margin: 0;
+    font-weight: bold;
+}
+.table-header2 {
+    margin: 0;
+    font-weight: bold;
+}
+
+
+th, td {
+    text-align: left;
+    padding: 16px;
+
+}
+
+.column {
+    float: left;
+    width: 100%;
+    padding: 5px;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}

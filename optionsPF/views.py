@@ -50,8 +50,8 @@ def search(request):
         context = {'calls': option_chain[0], 'puts': option_chain[1],
                    'strategies': option_chain[2], 'price': stock_price,
                    'strategy': strategy, 'ticker': ticker, 'date': date}
-        if strategy == 'Covered-Call':
-            return render(request, 'optionsPF/covered_call.html', context)
+        if strategy == 'Butterfly':
+            return render(request, 'optionsPF/butterfly.html', context)
         else:
             return render(request, 'optionsPF/date.html')
     else:
@@ -72,4 +72,4 @@ def covered_call(request):
         contract_attributes = contract.return_attributes()
         return render(request, 'optionsPF/success.html', contract_attributes)
     else:
-        return render(request, 'optionsPF/covered_call.html')
+        return render(request, 'optionsPF/butterfly.html')

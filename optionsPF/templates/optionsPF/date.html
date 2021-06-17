@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
 <label>Enter a Stock Ticker</label>
@@ -14,7 +15,7 @@
             {% for i in option_expiry_dates_list %}
                 <option value="{{ i }}">{{ i }}</option>
             {% endfor %}
-        </select>
+        </select class="custom-select-sm">
                 <label>Select an Options Strategy</label>
             {% csrf_token %}
         <select id="the-id" name="selected-strategy">
