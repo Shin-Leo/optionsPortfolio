@@ -71,8 +71,8 @@ def butterfly(request):
         purchase_date = datetime.datetime.now(tz=eastern).date()
 
         contract = ButterflySpread.objects.create(strike=strike, contract_price=last_price, purchase_date=purchase_date,
-                                            expiry_date=expiry_date, num_contracts=num_contracts, ticker=ticker,
-                                            strategy_name=strategy)
+                                                  expiry_date=expiry_date, num_contracts=num_contracts, ticker=ticker,
+                                                  strategy_name=strategy)
         contract.save()
         contract_attributes = contract.return_attributes()
         return render(request, 'optionsPF/success.html', contract_attributes)
