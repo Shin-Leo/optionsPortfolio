@@ -78,3 +78,7 @@ def butterfly(request):
         return render(request, 'optionsPF/success.html', contract_attributes)
     else:
         return render(request, 'optionsPF/butterfly.html')
+
+
+def portfolio(request):
+    return render(request, 'optionsPF/portfolio.html')

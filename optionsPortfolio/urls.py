@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', v.register, name="portfolio-registration"),
     path('', include('optionsPF.urls')),
+    path('', include("django.contrib.auth.urls")),
 ]

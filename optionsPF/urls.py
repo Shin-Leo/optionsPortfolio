@@ -13,6 +13,7 @@ urlpatterns = [
     path('search/', views.search, name='portfolio-search'),
     path('dates/', views.dates, name='portfolio-dates'),
     path('butterfly/', views.butterfly, name='portfolio-butterfly'),
+    path('portfolio/', views.portfolio, name='portfolio-user'),
     url(r'^butterfly$', views.butterfly, name='get-butterfly'),
 ]
 

@@ -28,5 +28,10 @@
         </tr>
         </tbody>
             </table>
+        {% if user.is_authenticated %}
+            <p>Add this strategy to your portfolio</p>
+        {% else %}
+            <p>To Track This Strategy in Your Portfolio, Create an Account <a href="/register">here</a></p>
+        {% endif %}
 </body>
 </html>
