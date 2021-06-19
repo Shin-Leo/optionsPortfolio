@@ -62,21 +62,25 @@ def get_stock_price(ticker):
     if week_number == 5:
         date_time = date_time.date() - timedelta(days=1)
         retrieved_date = date_time
+        time = "15:47"
+        hour = "15"
     elif week_number == 6:
         date_time = date_time.date() - timedelta(days=2)
         retrieved_date = date_time
+        time = "15:47"
+        hour = "15"
     elif week_number == 0 and ((int(hour) < 9 and int(mins) < 35) or int(hour) < 10):
         date_time = date_time.date() - timedelta(days=3)
         retrieved_date = date_time
     elif (int(hour) < 9 and int(mins) < 35) or int(hour) < 10:
         date_time = date_time.date() - timedelta(days=1)
         retrieved_date = date_time
-        time = "15:45"
+        time = "15:47"
     data = yf.download(ticker, start=retrieved_date, interval="15m")
     string_time = data.index.astype(str).str[11:16]
     interval = choose_stock_interval(time, string_time)
     price_param = '{:%Y/%m/%d }'.format(retrieved_date) + interval + '-04:00'
-    if int(hour) >= 16:
+    if int(hour) >= 15:
         price = np.round(data.at[price_param, 'Close'], 2)
     else:
         price = np.round(data.at[price_param, 'Open'], 2)
