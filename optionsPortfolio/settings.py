@@ -129,7 +129,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-LOGIN_REDIRECT_URL = "/portfolio"
+LOGIN_REDIRECT_URL = "login_success"
 LOGOUT_REDIRECT_URL = "/"
 
 # Default primary key field type

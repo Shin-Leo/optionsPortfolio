@@ -7,11 +7,21 @@
 {% endblock %}
 
 {% block content %}
-{% load crispy_forms_tags %}
-<form method="post" class="form-group">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" class="btn btn-secondary">Submit</button>
-    <p>Don't have an account? Create one <a href="/register">here</a></p>
-</form>
+    {% load crispy_forms_tags %}
+    <form method="post" class="form-group" action="accounts/auth/" role="form">
+        {{ form|crispy }}
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Submit</button>
+        <input type="hidden" value={{ id }} name="contract-id">
+        <p>Don't have an account? Create one <a href="/register">here</a></p>
+        {% if messages %}
+            {% for message in messages %}
+                {% if forloop.first %}
+                    <input name="contract-id" type="hidden" value="{{ message }}">
+                {% else %}
+                    <input name="prev-link" type="hidden" value="{{ message }}">
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </form>
 {% endblock %}

@@ -1,8 +1,8 @@
-from django.conf import settings
 from django.conf.urls import url
 from django.urls import path
-from . import views
+from optionsPF import views
 from django.conf.urls.static import static
+from register import views as v
 from django.contrib.staticfiles.views import serve
 from django.views.decorators.cache import cache_control
 from django.conf import settings
@@ -14,6 +14,7 @@ urlpatterns = [
     path('dates/', views.dates, name='portfolio-dates'),
     path('butterfly/', views.butterfly, name='portfolio-butterfly'),
     path('portfolio/', views.portfolio, name='portfolio-user'),
+    path('pre_login/', v.pre_login, name='register-pre-login'),
     url(r'^butterfly$', views.butterfly, name='get-butterfly'),
 ]
 

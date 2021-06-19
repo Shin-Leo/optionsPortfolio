@@ -60,7 +60,10 @@ def search(request):
 
 
 def butterfly(request):
-    if request.method == 'POST':
+    referrer_link = request.META.get('HTTP_REFERER')
+    split_link = str(referrer_link).split('/')[3]
+
+    if request.method == 'POST' and split_link != 'login':
         strike = request.POST.get('strike-price')
         last_price = request.POST.get('last-price')
         strategy = request.POST.get('selected-strategy')
@@ -75,9 +78,15 @@ def butterfly(request):
                                                   strategy_name=strategy)
         contract.save()
         contract_attributes = contract.return_attributes()
+        contract_attributes.update({'backLink': split_link})
         return render(request, 'optionsPF/success.html', contract_attributes)
+    elif split_link == 'login':
+        contract_id = request.POST.get('contract-id')
+        contract = ButterflySpread.objects.get(pk=contract_id)
+        attributes = contract.return_attributes()
+        return render(request, 'optionsPF/success.html', attributes)
     else:
-        return render(request, 'optionsPF/butterfly.html')
+        return render(request, 'optionsPF/home.html')
 
 
 def portfolio(request):

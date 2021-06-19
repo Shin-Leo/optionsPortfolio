@@ -1,3 +1,4 @@
+{% extends "optionsPF/base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,17 +6,17 @@
     <title>Title</title>
 </head>
 <body>
-    <label>Success!</label>
-        <table class="contract-table">
-            <thead>
-            <th>Strike</th>
-            <th>Purchase Price</th>
-            <th>Purchase Date</th>
-            <th>Expiry Date</th>
-            <th>Contract Size</th>
-            <th>Ticker</th>
-            <th>Strategy</th>
-            </thead>
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+        <th>Strike</th>
+        <th>Purchase Price</th>
+        <th>Purchase Date</th>
+        <th>Expiry Date</th>
+        <th>Contract Size</th>
+        <th>Ticker</th>
+        <th>Strategy</th>
+        </thead>
         <tbody>
         <tr>
             <td>{{ strike }}</td>
@@ -27,11 +28,19 @@
             <td>{{ strategy }}</td>
         </tr>
         </tbody>
-            </table>
-        {% if user.is_authenticated %}
-            <p>Add this strategy to your portfolio</p>
-        {% else %}
+    </table>
+    {% if user.is_authenticated %}
+        <p>Add this strategy to your portfolio</p>
+    {% else %}
+        <form method="post" action="/pre_login/">
+            {% csrf_token %}
+            <input type="hidden" value={{ id }} name="contract-id">
+            <input type="hidden" value={{ backLink }} name="referral-link">
             <p>To Track This Strategy in Your Portfolio, Create an Account <a href="/register">here</a></p>
-        {% endif %}
+            <p>If You Have an Existing Account, <button type="submit">Login In</button></p>
+        </form>
+    {% endif %}
+{% endblock %}
+
 </body>
 </html>
