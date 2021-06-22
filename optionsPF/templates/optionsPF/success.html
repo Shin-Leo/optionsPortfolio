@@ -30,7 +30,12 @@
         </tbody>
     </table>
     {% if user.is_authenticated %}
-        <p>Add this strategy to your portfolio</p>
+        <form method="post" action="/portfolio/">
+            {% csrf_token %}
+            <input type="hidden" value={{ id }} name="contract-id">
+            <input type="hidden" value={{ backLink }} name="referral-link">
+                <button type="submit">Add this strategy to your portfolio</button>
+        </form>
     {% else %}
         <form method="post" action="/pre_login/">
             {% csrf_token %}

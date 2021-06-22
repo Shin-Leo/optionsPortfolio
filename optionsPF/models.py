@@ -7,6 +7,9 @@ class Portfolio(models.Model):
     id = models.BigAutoField(primary_key=True)
     strategies = JSONField()
 
+    def return_strategies(self):
+        attributes = {"strategies": self.strategies}
+
 
 class User(models.Model):
     id = models.BigAutoField(primary_key=True)

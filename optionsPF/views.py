@@ -2,10 +2,12 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
-import datetime
 from .options_chain import *
 from django import forms
+import datetime
 import pdb
+import json
+import uuid
 from .models import *
 
 
@@ -89,5 +91,31 @@ def butterfly(request):
         return render(request, 'optionsPF/home.html')
 
 
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, z):
+        if isinstance(z, datetime.datetime):
+            return str(z)
+        else:
+            return super().default(z)
+
+
 def portfolio(request):
-    return render(request, 'optionsPF/portfolio.html')
+    if request.method == 'POST':
+        strategies = request.POST
+        contract_id = request.POST.get('contract-id')
+        user_id = uuid.uuid4()
+        string_id = user_id.__str__()
+        contract = ButterflySpread.objects.get(pk=contract_id)
+        contract_attributes = contract.return_attributes()
+        contract_attributes['contract_price'] = float(contract_attributes['contract_price'])
+        # float_attributes = float(contract_attributes)
+        json_attributes = json.dumps(contract_attributes, cls=DateTimeEncoder)
+        print(json_attributes)
+        strategies = {"\""+string_id+"\"": json_attributes}
+        json_strategies = json.dumps(strategies)
+        print(json_strategies)
+        user_portfolio = Portfolio.objects.create(strategies=json_strategies)
+        user_portfolio.save()
+        user_portfolio_strategies = user_portfolio.return_strategies()
+        print(user_portfolio_strategies)
+        return render(request, 'optionsPF/portfolio.html', user_portfolio_strategies)
