@@ -101,21 +101,17 @@ class DateTimeEncoder(json.JSONEncoder):
 
 def portfolio(request):
     if request.method == 'POST':
-        strategies = request.POST
         contract_id = request.POST.get('contract-id')
         user_id = uuid.uuid4()
         string_id = user_id.__str__()
         contract = ButterflySpread.objects.get(pk=contract_id)
         contract_attributes = contract.return_attributes()
         contract_attributes['contract_price'] = float(contract_attributes['contract_price'])
-        # float_attributes = float(contract_attributes)
+        contract_attributes.update({"uuid": string_id})
         json_attributes = json.dumps(contract_attributes, cls=DateTimeEncoder)
-        print(json_attributes)
-        strategies = {"\""+string_id+"\"": json_attributes}
-        json_strategies = json.dumps(strategies)
-        print(json_strategies)
-        user_portfolio = Portfolio.objects.create(strategies=json_strategies)
+        user_portfolio = Portfolio.objects.create(strategies=json_attributes)
         user_portfolio.save()
         user_portfolio_strategies = user_portfolio.return_strategies()
+        context = {"user_strategies": user_portfolio_strategies}
         print(user_portfolio_strategies)
-        return render(request, 'optionsPF/portfolio.html', user_portfolio_strategies)
+        return render(request, 'optionsPF/portfolio.html', context)

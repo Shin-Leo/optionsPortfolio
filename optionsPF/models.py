@@ -9,6 +9,7 @@ class Portfolio(models.Model):
 
     def return_strategies(self):
         attributes = {"strategies": self.strategies}
+        return attributes
 
 
 class User(models.Model):
