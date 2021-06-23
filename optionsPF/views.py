@@ -112,6 +112,7 @@ def portfolio(request):
         user_portfolio = Portfolio.objects.create(strategies=json_attributes)
         user_portfolio.save()
         user_portfolio_strategies = user_portfolio.return_strategies()
-        context = {"user_strategies": user_portfolio_strategies}
-        print(user_portfolio_strategies)
-        return render(request, 'optionsPF/portfolio.html', context)
+        contract_details = json.loads(user_portfolio_strategies['strategies'])
+        u = User.objects
+        print(u)
+        return render(request, 'optionsPF/portfolio.html', contract_details)
