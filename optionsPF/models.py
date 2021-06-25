@@ -1,17 +1,17 @@
 from django.db import models
 from django.db.models import DateTimeField, JSONField
 from django.contrib.auth.models import User
-import datetime
+import json
+
 
 
 class Portfolio(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
-    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
     strategies = JSONField()
 
-    def return_strategies(self):
-        attributes = {"strategies": self.strategies}
-        return attributes
+    def return_owner(self):
+        owner = {"owner": self.user}
+        return owner
 
 
 class ButterflySpread(models.Model):
@@ -25,11 +25,8 @@ class ButterflySpread(models.Model):
     strategy_name = models.CharField(max_length=20)
 
     def return_attributes(self):
-        attributes = {"strike": self.strike, "contract_price": self.contract_price, 'purchase_date': self.purchase_date,
-                      "expiry_date": self.expiry_date, "num_contracts": self.num_contracts, "ticker": self.ticker,
-                      "strategy": self.strategy_name}
+        attributes = {"id": self.id, "strike": self.strike, "contract_price": self.contract_price,
+                      'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
+                      "num_contracts": self.num_contracts,
+                      "ticker": self.ticker, "strategy": self.strategy_name}
         return attributes
-
-
-
-

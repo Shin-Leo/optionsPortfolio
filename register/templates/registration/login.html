@@ -12,7 +12,7 @@
         {{ form|crispy }}
         {% csrf_token %}
         <button type="submit" class="btn btn-secondary">Submit</button>
-        <input type="hidden" value={{ id }} name="contract-id">
+        <input type="hidden" name="contract-id" value= {{ id }}>
         <p>Don't have an account? Create one <a href="/register">here</a></p>
         {% if messages %}
             {% for message in messages %}

@@ -1,7 +1,9 @@
+import django
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
+from django.db.utils import IntegrityError
 from .options_chain import *
 from django import forms
 import datetime
@@ -64,7 +66,7 @@ def search(request):
 def butterfly(request):
     referrer_link = request.META.get('HTTP_REFERER')
     split_link = str(referrer_link).split('/')[3]
-
+    print(split_link)
     if request.method == 'POST' and split_link != 'login':
         strike = request.POST.get('strike-price')
         last_price = request.POST.get('last-price')
@@ -81,6 +83,7 @@ def butterfly(request):
         contract.save()
         contract_attributes = contract.return_attributes()
         contract_attributes.update({'backLink': split_link})
+        print(contract_attributes)
         return render(request, 'optionsPF/success.html', contract_attributes)
     elif split_link == 'login':
         contract_id = request.POST.get('contract-id')
@@ -107,12 +110,21 @@ def portfolio(request):
         contract = ButterflySpread.objects.get(pk=contract_id)
         contract_attributes = contract.return_attributes()
         contract_attributes['contract_price'] = float(contract_attributes['contract_price'])
-        contract_attributes.update({"uuid": string_id})
-        json_attributes = json.dumps(contract_attributes, cls=DateTimeEncoder)
-        user_portfolio = Portfolio.objects.create(strategies=json_attributes)
-        user_portfolio.save()
-        user_portfolio_strategies = user_portfolio.return_strategies()
-        contract_details = json.loads(user_portfolio_strategies['strategies'])
-        u = User.objects
-        print(u)
-        return render(request, 'optionsPF/portfolio.html', contract_details)
+        unique_contract_attributes = {string_id: contract_attributes}
+        json_attributes = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
+        try:
+            user_portfolio = Portfolio.objects.create(user=request.user, strategies=json_attributes)
+            user_portfolio.save()
+            user_portfolio_strategies = user_portfolio.strategies
+            contract_details = json.loads(user_portfolio_strategies[string_id])
+            return render(request, 'optionsPF/portfolio.html', contract_details)
+        except IntegrityError or AttributeError:
+            retrieved_portfolio = Portfolio.objects.get(pk=request.user)
+            existing_strategies = eval(retrieved_portfolio.strategies)
+            existing_strategies.update(unique_contract_attributes)
+            json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
+            retrieved_portfolio.strategies = json_attributes
+            retrieved_portfolio.save()
+            print(existing_strategies)
+            return render(request, 'optionsPF/portfolio.html', existing_strategies)
+
