@@ -116,6 +116,7 @@ def portfolio(request):
             user_portfolio = Portfolio.objects.create(user=request.user, strategies=json_attributes)
             user_portfolio.save()
             user_portfolio_strategies = user_portfolio.strategies
+            print(user_portfolio_strategies)
             contract_details = json.loads(user_portfolio_strategies[string_id])
             return render(request, 'optionsPF/portfolio.html', contract_details)
         except IntegrityError or AttributeError:
@@ -126,5 +127,12 @@ def portfolio(request):
             retrieved_portfolio.strategies = json_attributes
             retrieved_portfolio.save()
             print(existing_strategies)
-            return render(request, 'optionsPF/portfolio.html', existing_strategies)
+            for key, value in list(existing_strategies.items()):
+                print(key)
+                print(value)
+                for k, v in list(value.items()):
+                    if k == 'id':
+                        value.pop(k)
+            contract_details = {"contract": existing_strategies}
+            return render(request, 'optionsPF/portfolio.html', contract_details)
 

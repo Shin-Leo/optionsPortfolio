@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    {% block title %}
+    {% endblock %}
 </head>
 <body>
 {% block content %}
-        <table class="table table-hover">
+    <table class="table table-hover">
         <thead>
         <th>Strike</th>
-        <th>Purchase Price</th>
+        <th>Contract Price</th>
         <th>Purchase Date</th>
         <th>Expiry Date</th>
         <th>Contract Size</th>
@@ -17,9 +22,13 @@
         <th>Strategy</th>
         </thead>
         <tbody>
-                <tr>
-                    <td> {{ 0f3a923a-2478-4efa-ae80-327802ffc4bc }} </td>
-                </tr>
+            {% for key, value in contract.items %}
+        <tr>
+            {% for keys, values in value.items %}
+                <td>{{ values }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
         </tbody>
     </table>
 {% endblock %}
