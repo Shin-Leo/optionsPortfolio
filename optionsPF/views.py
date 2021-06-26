@@ -68,16 +68,26 @@ def butterfly(request):
     split_link = str(referrer_link).split('/')[3]
     print(split_link)
     if request.method == 'POST' and split_link != 'login':
-        strike = request.POST.get('strike-price')
-        last_price = request.POST.get('last-price')
+        lower_strike = request.POST.get('low-strike')
+        midpoint_strike = request.POST.get('mid-strike')
+        upper_strike = request.POST.get('high-strike')
+        lower_contract_price = request.POST.get('low_contract_price')
+        midpoint_contract_price = request.POST.get('mid_contract_price')
+        upper_contract_price = request.POST.get('high_contract_price')
+        strategy_price = 0
         strategy = request.POST.get('selected-strategy')
         ticker = request.POST.get('selected-ticker')
-        num_contracts = 1
+        num_contracts = request.POST.get('num-contracts')
         expiry_date = request.POST.get('selected-expiry')
         eastern = timezone('US/Eastern')
         purchase_date = datetime.datetime.now(tz=eastern).date()
 
-        contract = ButterflySpread.objects.create(strike=strike, contract_price=last_price, purchase_date=purchase_date,
+        contract = ButterflySpread.objects.create(lower_bound_strike=lower_strike, midpoint_strike=midpoint_strike,
+                                                  upper_bound_strike=upper_strike,
+                                                  lower_contract_price=lower_contract_price,
+                                                  midpoint_contract_price=midpoint_contract_price,
+                                                  upper_contract_price=upper_contract_price,
+                                                  strategy_price=strategy_price, purchase_date=purchase_date,
                                                   expiry_date=expiry_date, num_contracts=num_contracts, ticker=ticker,
                                                   strategy_name=strategy)
         contract.save()

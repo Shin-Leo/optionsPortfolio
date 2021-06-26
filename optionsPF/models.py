@@ -16,8 +16,13 @@ class Portfolio(models.Model):
 
 class ButterflySpread(models.Model):
     id = models.BigAutoField(primary_key=True)
-    strike = models.PositiveIntegerField()
-    contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    lower_bound_strike = models.PositiveIntegerField()
+    midpoint_strike = models.PositiveIntegerField()
+    upper_bound_strike = models.PositiveIntegerField()
+    lower_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    midpoint_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    upper_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    strategy_price = models.DecimalField(max_digits=10, decimal_places=2)
     purchase_date = DateTimeField()
     expiry_date = DateTimeField()
     num_contracts = models.PositiveIntegerField()
@@ -25,7 +30,8 @@ class ButterflySpread(models.Model):
     strategy_name = models.CharField(max_length=20)
 
     def return_attributes(self):
-        attributes = {"id": self.id, "strike": self.strike, "contract_price": self.contract_price,
+        attributes = {"id": self.id, "lower_strike": self.lower_bound_strike, "midpoint_strike": self.midpoint_strike,
+                      "upper_strike": self.upper_bound_strike, "strategy_price": self.strategy_price,
                       'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
                       "num_contracts": self.num_contracts,
                       "ticker": self.ticker, "strategy": self.strategy_name}

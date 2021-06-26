@@ -23,13 +23,39 @@
     <input type="hidden" name="selected-strategy" value={{ strategy|safe }}>
     <input type="hidden" name="selected-ticker" value={{ ticker }}>
     <input type="hidden" name="selected-expiry" value={{ date }}>
-    <input type="hidden" id="selected-last-price" name="last-price" value=0>
+    <input type="hidden" id="low-selected-last-price" name="low_contract_price" value=0>
+    <input type="hidden" id="mid-selected-last-price" name="mid_contract_price" value=0>
+    <input type="hidden" id="high-selected-last-price" name="high_contract_price" value=0>
     <div class="form-group form-inline">
         <h4>The stock price is <span class="label label-pill label-success">{{ price }}</span></h4>
+            <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">Select a Strategy Variant</label>
+        <select id="inputGroupSelect01" name="selected-butterfly" class="form-select">
+            <option selected value="Long Call Butterfly Spread">Long Call Butterfly Spread</option>
+            <option value="Short Call Butterfly Spread">Short Call Butterfly Spread</option>
+            <option value="Long Put Butterfly Spread">Long Put Butterfly Spread</option>
+            <option value="Short Put Butterfly Spread">Short Put Butterfly Spread</option>
+        </select>
+    </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Select a Strike Price For Your Call</span>
+            <span class="input-group-text" id="basic-addon1">Select a Lower Bound Strike Price For Your Strategy</span>
             <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
-                   name="strike-price" id="strikeId">
+                   name="low-strike" id="low_strikeId">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Select an Upper Bound Strike Price For Your Strategy</span>
+            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
+                   name="high-strike" id="high_strikeId">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Select a Midpoint Strike Price For Your Strategy</span>
+            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
+                   name="mid-strike" id="mid_strikeId">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">How Many Strategies Would You Like to Execute?</span>
+            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
+                   name="num-contracts" id="contracts">
         </div>
         <button type="submit" class="btn btn-secondary" onclick="get_last_price()">Submit</button>
     </div>
