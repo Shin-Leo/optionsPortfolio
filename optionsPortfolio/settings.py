@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'optionsPortfolio.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'portfolio',
+        'NAME': 'postgres',
         'USER': 'leoshin',
         'PASSWORD': 'Sm56712345',
         'HOST': 'localhost',
@@ -91,7 +91,7 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+# https://docs.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
