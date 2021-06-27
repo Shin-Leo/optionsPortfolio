@@ -1,51 +1,130 @@
-{% extends "optionsPF/base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #555;
+        }
+
+        .collapsible:after {
+            content: '\002B';
+            color: white;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .active:after {
+            content: "\2212";
+        }
+
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
+
 <body>
-{% block content %}
-    <table class="table table-hover">
+<button class="collapsible">Open Collapsible</button>
+<div class="content">
+    <table class="table table-condensed">
         <thead>
-        <th>Strike</th>
-        <th>Purchase Price</th>
-        <th>Purchase Date</th>
-        <th>Expiry Date</th>
-        <th>Contract Size</th>
-        <th>Ticker</th>
-        <th>Strategy</th>
+        <tr>
+            <th>Strike</th>
+            <th>Purchase Price</th>
+            <th>Purchase Date</th>
+            <th>Expiry Date</th>
+            <th>Contract Size</th>
+            <th>Ticker</th>
+            <th>Strategy</th>
+        </tr>
         </thead>
         <tbody>
         <tr>
-            <td>{{ strike }}</td>
-            <td>{{ contract_price }}</td>
+            <td>{{ lower_strike }}</td>
+            <td>{{ strategy_price }}</td>
             <td>{{ purchase_date }}</td>
             <td>{{ expiry_date }}</td>
             <td>{{ num_contracts }}</td>
             <td>{{ ticker }}</td>
-            <td>{{ strategy }}</td>
+        </tr>
+                <tr>
+            <td>{{ lower_strike }}</td>
+            <td>{{ strategy_price }}</td>
+            <td>{{ purchase_date }}</td>
+            <td>{{ expiry_date }}</td>
+            <td>{{ num_contracts }}</td>
+            <td>{{ ticker }}</td>
+        </tr>
+                <tr>
+            <td>{{ lower_strike }}</td>
+            <td>{{ strategy_price }}</td>
+            <td>{{ purchase_date }}</td>
+            <td>{{ expiry_date }}</td>
+            <td>{{ num_contracts }}</td>
+            <td>{{ ticker }}</td>
         </tr>
         </tbody>
     </table>
-    {% if user.is_authenticated %}
-        <form method="post" action="/portfolio/">
-            {% csrf_token %}
-            <input type="hidden" value={{ id }} name="contract-id">
-            <input type="hidden" value={{ backLink }} name="referral-link">
-                <button type="submit">Add this strategy to your portfolio</button>
-        </form>
-    {% else %}
-        <form method="post" action="/pre_login/">
-            {% csrf_token %}
-            <input type="hidden" value={{ id }} name="contract-id">
-            <input type="hidden" value={{ backLink }} name="referral-link">
-            <p>To Track This Strategy in Your Portfolio, Create an Account <a href="/register">here</a></p>
-            <p>If You Have an Existing Account, <button type="submit">Login In</button></p>
-        </form>
-    {% endif %}
-{% endblock %}
+</div>
+{% if user.is_authenticated %}
+    <form method="post" action="/portfolio/">
+        {% csrf_token %}
+        <input type="hidden" value={{ id }} name="contract-id">
+        <input type="hidden" value={{ backLink }} name="referral-link">
+            <button type="submit" class="btn btn-secondary">Add this strategy to your portfolio</button>
+    </form>
+{% else %}
+    <form method="post" action="/pre_login/">
+        {% csrf_token %}
+        <input type="hidden" value={{ id }} name="contract-id">
+        <input type="hidden" value={{ backLink }} name="referral-link">
+        <p>To Track This Strategy in Your Portfolio, Create an Account <a href="/register">here</a></p>
+        <p>If You Have an Existing Account,
+            <button type="submit">Login In</button>
+        </p>
+    </form>
+{% endif %}
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
