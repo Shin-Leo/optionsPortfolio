@@ -49,7 +49,7 @@
 </head>
 
 <body>
-<button class="collapsible">Open Collapsible</button>
+<button class="collapsible">{{ collapsible_tag}}</button>
 <div class="content">
     <table class="table table-condensed">
         <thead>
@@ -66,23 +66,23 @@
         <tbody>
         <tr>
             <td>{{ lower_strike }}</td>
-            <td>{{ strategy_price }}</td>
+            <td>{{ low_strike_contract_price }}</td>
             <td>{{ purchase_date }}</td>
             <td>{{ expiry_date }}</td>
             <td>{{ num_contracts }}</td>
             <td>{{ ticker }}</td>
         </tr>
                 <tr>
-            <td>{{ lower_strike }}</td>
-            <td>{{ strategy_price }}</td>
+            <td>{{ midpoint_strike }}</td>
+            <td>{{ mid_strike_contract_price }}</td>
             <td>{{ purchase_date }}</td>
             <td>{{ expiry_date }}</td>
             <td>{{ num_contracts }}</td>
             <td>{{ ticker }}</td>
         </tr>
                 <tr>
-            <td>{{ lower_strike }}</td>
-            <td>{{ strategy_price }}</td>
+            <td>{{ upper_strike }}</td>
+            <td>{{ high_strike_contract_price }}</td>
             <td>{{ purchase_date }}</td>
             <td>{{ expiry_date }}</td>
             <td>{{ num_contracts }}</td>

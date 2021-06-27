@@ -6,7 +6,8 @@ from django.shortcuts import HttpResponse
 from django.db.utils import IntegrityError
 from .options_chain import *
 from django import forms
-import datetime
+import datetime as dt
+from datetime import datetime
 import pdb
 import json
 import uuid
@@ -66,7 +67,6 @@ def search(request):
 def butterfly(request):
     referrer_link = request.META.get('HTTP_REFERER')
     split_link = str(referrer_link).split('/')[3]
-    print(split_link)
     if request.method == 'POST' and split_link != 'login':
         lower_strike = request.POST.get('low-strike')
         midpoint_strike = request.POST.get('mid-strike')
@@ -75,38 +75,53 @@ def butterfly(request):
         midpoint_contract_price = request.POST.get('mid_contract_price')
         upper_contract_price = request.POST.get('high_contract_price')
         strategy_price = 0
-        strategy = request.POST.get('selected-strategy')
         ticker = request.POST.get('selected-ticker')
+        selected_strategy = request.POST.get('selected-butterfly')
         num_contracts = request.POST.get('num-contracts')
         expiry_date = request.POST.get('selected-expiry')
         eastern = timezone('US/Eastern')
-        purchase_date = datetime.datetime.now(tz=eastern).date()
-
+        purchase_date = dt.datetime.now(tz=eastern).date()
+        collapsible_tag = create_collapsible_button_tag(expiry_date, lower_strike, midpoint_strike, upper_strike, selected_strategy)
         contract = ButterflySpread.objects.create(lower_bound_strike=lower_strike, midpoint_strike=midpoint_strike,
                                                   upper_bound_strike=upper_strike,
-                                                  lower_contract_price=lower_contract_price,
-                                                  midpoint_contract_price=midpoint_contract_price,
-                                                  upper_contract_price=upper_contract_price,
+                                                  low_strike_contract_price=lower_contract_price,
+                                                  mid_strike_contract_price=midpoint_contract_price,
+                                                  high_strike_contract_price=upper_contract_price,
                                                   strategy_price=strategy_price, purchase_date=purchase_date,
                                                   expiry_date=expiry_date, num_contracts=num_contracts, ticker=ticker,
-                                                  strategy_name=strategy)
+                                                  collapsible_tag=collapsible_tag,
+                                                  strategy_name=selected_strategy)
         contract.save()
         contract_attributes = contract.return_attributes()
         contract_attributes.update({'backLink': split_link})
-        print(contract_attributes)
         return render(request, 'optionsPF/success.html', contract_attributes)
     elif split_link == 'login':
         contract_id = request.POST.get('contract-id')
         contract = ButterflySpread.objects.get(pk=contract_id)
         attributes = contract.return_attributes()
+        collapsible_tag = create_collapsible_button_tag(attributes["expiry_date"], attributes["lower_strike"],
+                                                        attributes["midpoint_strike"],
+                                                        attributes["upper_strike"],
+                                                        attributes["strategy"])
+        attributes.update({'collapsible_tag': collapsible_tag})
+        ButterflySpread.objects.filter(pk=contract_id).update(collapsible_tag=collapsible_tag)
         return render(request, 'optionsPF/success.html', attributes)
     else:
         return render(request, 'optionsPF/home.html')
 
 
+def create_collapsible_button_tag(date, low, mid, high, strategy):
+    if type(date) == str:
+        datetime_obj = datetime.strptime(str(date) + " 00:00:00", '%Y-%m-%d %H:%M:%S')
+        month = datetime_obj.strftime("%B")
+    else:
+        month = date.strftime("%B")
+    return month + f" {low}:{mid}:{high} " + strategy
+
+
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, z):
-        if isinstance(z, datetime.datetime):
+        if isinstance(z, dt.datetime):
             return str(z)
         else:
             return super().default(z)
@@ -119,16 +134,17 @@ def portfolio(request):
         string_id = user_id.__str__()
         contract = ButterflySpread.objects.get(pk=contract_id)
         contract_attributes = contract.return_attributes()
-        contract_attributes['contract_price'] = float(contract_attributes['contract_price'])
+        contract_attributes['low_strike_contract_price'] = float(contract_attributes['low_strike_contract_price'])
+        contract_attributes['mid_strike_contract_price'] = float(contract_attributes['mid_strike_contract_price'])
+        contract_attributes['high_strike_contract_price'] = float(contract_attributes['high_strike_contract_price'])
+        contract_attributes['strategy_price'] = float(contract_attributes['strategy_price'])
         unique_contract_attributes = {string_id: contract_attributes}
         json_attributes = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
         try:
             user_portfolio = Portfolio.objects.create(user=request.user, strategies=json_attributes)
             user_portfolio.save()
-            user_portfolio_strategies = user_portfolio.strategies
-            print(user_portfolio_strategies)
-            contract_details = json.loads(user_portfolio_strategies[string_id])
-            return render(request, 'optionsPF/portfolio.html', contract_details)
+            context = retrieve_butterfly_contracts(unique_contract_attributes)
+            return render(request, 'optionsPF/portfolio.html', {"context": context})
         except IntegrityError or AttributeError:
             retrieved_portfolio = Portfolio.objects.get(pk=request.user)
             existing_strategies = eval(retrieved_portfolio.strategies)
@@ -136,13 +152,20 @@ def portfolio(request):
             json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
             retrieved_portfolio.strategies = json_attributes
             retrieved_portfolio.save()
-            print(existing_strategies)
-            for key, value in list(existing_strategies.items()):
-                print(key)
-                print(value)
-                for k, v in list(value.items()):
-                    if k == 'id':
-                        value.pop(k)
-            contract_details = {"contract": existing_strategies}
-            return render(request, 'optionsPF/portfolio.html', contract_details)
+            context = retrieve_butterfly_contracts(existing_strategies)
+            return render(request, 'optionsPF/portfolio.html', {"context": context})
 
+
+def retrieve_butterfly_contracts(strategies):
+    context = {}
+    for key, value in strategies.items():
+        for k, v in value.items():
+            if k == 'id':
+                butterfly_object = ButterflySpread.objects.get(pk=v)
+                low_contract = butterfly_object.return_low_leg()
+                mid_contract = butterfly_object.return_middle_leg()
+                high_contract = butterfly_object.return_high_leg()
+                tag = butterfly_object.return_collapsible_tag()
+                context.update({tag: [low_contract, mid_contract, high_contract]})
+                break
+    return context

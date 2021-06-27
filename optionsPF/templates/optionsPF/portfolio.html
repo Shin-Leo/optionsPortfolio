@@ -3,34 +3,94 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
-    {% block title %}
-    {% endblock %}
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    <style>
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #555;
+        }
+
+        .collapsible:after {
+            content: '\002B';
+            color: white;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .active:after {
+            content: "\2212";
+        }
+
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
 {% block content %}
-    <table class="table table-hover">
-        <thead>
-        <th>Strike</th>
-        <th>Contract Price</th>
-        <th>Purchase Date</th>
-        <th>Expiry Date</th>
-        <th>Contract Size</th>
-        <th>Ticker</th>
-        <th>Strategy</th>
-        </thead>
-        <tbody>
-            {% for key, value in contract.items %}
-        <tr>
-            {% for keys, values in value.items %}
-                <td>{{ values }}</td>
-            {% endfor %}
-        </tr>
+    {% for key, value in context.items %}
+        <button class="collapsible">{{ key }}</button>
+        <div class="content">
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Strike</th>
+                    <th>Purchase Price</th>
+                    <th>Purchase Date</th>
+                    <th>Expiry Date</th>
+                    <th>Contract Size</th>
+                    <th>Ticker</th>
+                    <th>Strategy</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for array in value %}
+                    <tr>
+                        {% for k, v in array.items %}
+                            <td>{{ v }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endfor %}
-        </tbody>
-    </table>
 {% endblock %}
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+</script>
 </body>
 </html>
