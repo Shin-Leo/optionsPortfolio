@@ -165,6 +165,15 @@ def portfolio(request):
             retrieved_portfolio.save()
             context = retrieve_butterfly_contracts(existing_strategies)
             return render(request, 'optionsPF/portfolio.html', {"context": context})
+    else:
+        if request.user.is_authenticated:
+            retrieved_portfolio = Portfolio.objects.get(pk=request.user)
+            existing_strategies = eval(retrieved_portfolio.strategies)
+            json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
+            retrieved_portfolio.strategies = json_attributes
+            retrieved_portfolio.save()
+            context = retrieve_butterfly_contracts(existing_strategies)
+            return render(request, 'optionsPF/portfolio.html', {"context": context})
 
 
 def retrieve_butterfly_contracts(strategies):

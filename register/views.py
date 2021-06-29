@@ -53,15 +53,15 @@ def pre_login(request):
 def auth_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    referrer_link = request.POST.get('backlink')
-
-    split_link = str(referrer_link).split('/')
 
     user = auth.authenticate(username=username, password=password)
+
+    print("here")
 
     if user is not None:
         if user.is_active:
             auth.login(request, user)
+            print(request.POST)
             if "home-link" in request.POST:
                 return redirect("portfolio-home")
             else:
