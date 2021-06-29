@@ -103,7 +103,7 @@
         {% csrf_token %}
         <input type="hidden" value={{ id }} name="contract-id">
         <input type="hidden" value={{ backLink }} name="referral-link">
-        <p>To Track This Strategy in Your Portfolio, Create an Account:<button type="submit" class="btn btn-secondary" name="register-button">Register</button></p>
+        <p>To Track This Strategy in Your Portfolio: <button type="submit" class="btn btn-secondary" name="register-button">Create an Account</button></p>
         <p>If You Have an Existing Account: <button type="submit" class="btn btn-secondary" name="login-in-button">Login In</button> </p>
     </form>
 {% endif %}
