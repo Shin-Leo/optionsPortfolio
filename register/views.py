@@ -54,6 +54,7 @@ def auth_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
     referrer_link = request.POST.get('backlink')
+
     split_link = str(referrer_link).split('/')
 
     user = auth.authenticate(username=username, password=password)
@@ -61,7 +62,7 @@ def auth_view(request):
     if user is not None:
         if user.is_active:
             auth.login(request, user)
-            if split_link == "home":
+            if "home-link" in request.POST:
                 return redirect("portfolio-home")
             else:
                 return butterfly(request)

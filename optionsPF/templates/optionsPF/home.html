@@ -6,6 +6,11 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Home</title>
+    <style>
+    .navbar {
+        margin-left: 10px;
+    }
+    </style>
 </head>
 <body>
 {% if messages %}
@@ -17,13 +22,24 @@
 {% endif %}
 <form method="POST" action="/dates/">
     {% csrf_token %}
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="">Options Portfolio Builder</a>
-            <a class="navbar-brand" href="login">
-                <img src="/static/optionsPF/key-icon.svg" alt="" width="30" height="24"
+    <nav class="navbar navbar-light navbar-expand-md bg-faded justify-content-center">
+        <a href="/" class="navbar-brand d-flex w-50 mr-auto">Options Portfolio Builder</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse w-100" id="collapsingNavbar3">
+            <ul class="nav navbar-nav ml-auto w-100 justify-content-end">
+                <li class="nav-item">
+            <a class="navbar-brand " href="login">
+                <img src="/static/optionsPF/key-icon.svg" alt="" width="20" height="20"
                      class="d-inline-block align-text-top">
-            </a>
+            </a>                </li>
+                <li class="nav-item">
+            <a class="navbar-brand" href="portfolio">
+                <img src="/static/optionsPF/portfolio-icon.svg" alt="" width="20" height="20"
+                     class="d-inline-block align-text-top">
+            </a>                </li>
+            </ul>
         </div>
     </nav>
     <div class="input-group mb-3">
