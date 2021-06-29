@@ -1,24 +1,35 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
 {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
 <form method="POST" action="/dates/">
     {% csrf_token %}
-
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">Options Portfolio Builder</a>
+            <a class="navbar-brand" href="login">
+                <img src="/static/optionsPF/key-icon.svg" alt="" width="30" height="24"
+                     class="d-inline-block align-text-top">
+            </a>
+        </div>
+    </nav>
     <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">Enter a Stock Ticker</span>
-      <input type="text" class="form-control" placeholder="MSFT, AAPL, CRSR" aria-label="Username" aria-describedby="basic-addon1" name="textfield">
+        <span class="input-group-text" id="basic-addon1">Enter a Stock Ticker</span>
+        <input type="text" class="form-control" placeholder="MSFT, AAPL, CRSR" aria-label="Username"
+               aria-describedby="basic-addon1" name="textfield">
     </div>
     <button type="submit" class="btn btn-secondary">Submit</button>
 </form>
