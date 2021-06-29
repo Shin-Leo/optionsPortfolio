@@ -8,9 +8,19 @@
       integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
-    <form method="POST" class="form-group">
+    <form method="POST" class="form-group" action="/register/">
+        {% if messages %}
+            {% for message in messages %}
+                {% if forloop.first %}
+                    <input name="contract-id" type="hidden" value="{{ message }}">
+                {% else %}
+                    <input name="prev-link" type="hidden" value="{{ message }}">
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         {% csrf_token %}
         {{ form|crispy }}
+        <input name="backlink" type="hidden" value="{{ request.META.HTTP_REFERER }}">
         <button type="submit" class="btn btn-success">Register</button>
     </form>
 </body>

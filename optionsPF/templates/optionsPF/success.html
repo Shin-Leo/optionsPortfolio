@@ -103,20 +103,18 @@
         {% csrf_token %}
         <input type="hidden" value={{ id }} name="contract-id">
         <input type="hidden" value={{ backLink }} name="referral-link">
-        <p>To Track This Strategy in Your Portfolio, Create an Account <a href="/register">here</a></p>
-        <p>If You Have an Existing Account,
-            <button type="submit">Login In</button>
-        </p>
+        <p>To Track This Strategy in Your Portfolio, Create an Account:<button type="submit" class="btn btn-secondary" name="register-button">Register</button></p>
+        <p>If You Have an Existing Account: <button type="submit" class="btn btn-secondary" name="login-in-button">Login In</button> </p>
     </form>
 {% endif %}
 <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
+    let coll = document.getElementsByClassName("collapsible");
+    let i;
 
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
-            var content = this.nextElementSibling;
+            let content = this.nextElementSibling;
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
             } else {

@@ -10,15 +10,29 @@ from optionsPF.views import butterfly
 from .forms import RegisterForm
 
 
-def register(response):
-    if response.method == "POST":
-        form = RegisterForm(response.POST)
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        contract_id = request.POST.get("contract-id")
+        backlink = request.POST.get("prev-link")
+        print(contract_id)
+        link = request.META.get('HTTP_REFERER')
+        print(link)
+        split_link = str(link).split('/')[3]
         if form.is_valid():
             form.save()
-        redirect('/home')
+        if split_link == "register":
+            return butterfly(request)
+        elif split_link == "home":
+            redirect('/home')
     else:
         form = RegisterForm()
-    return render(response, "register/register.html", {"form": form})
+        return render(request, "register/register.html", {"form": form})
+
+
+def register_success(request):
+    print(request.POST)
+    return redirect("success")
 
 
 def login_success(request):
@@ -27,15 +41,19 @@ def login_success(request):
 
 
 def pre_login(request):
+    print(request.POST)
     messages.add_message(request, messages.INFO, request.POST.get('contract-id'))
     messages.add_message(request, messages.INFO, request.POST.get('referral-link'))
-    return redirect("login")
+    if "login-button" in request.POST:
+        return redirect("login")
+    else:
+        return redirect("/register/")
 
 
 def auth_view(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    referrer_link = request.POST.get('prev-link')
+    referrer_link = request.POST.get('backlink')
     split_link = str(referrer_link).split('/')
 
     user = auth.authenticate(username=username, password=password)

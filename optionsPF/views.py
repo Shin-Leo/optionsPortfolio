@@ -1,5 +1,5 @@
 import django
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
@@ -67,7 +67,8 @@ def search(request):
 def butterfly(request):
     referrer_link = request.META.get('HTTP_REFERER')
     split_link = str(referrer_link).split('/')[3]
-    if request.method == 'POST' and split_link != 'login':
+    print(split_link)
+    if request.method == 'POST' and split_link == 'search':
         lower_strike = request.POST.get('low-strike')
         midpoint_strike = request.POST.get('mid-strike')
         upper_strike = request.POST.get('high-strike')
@@ -95,7 +96,7 @@ def butterfly(request):
         contract_attributes = contract.return_attributes()
         contract_attributes.update({'backLink': split_link})
         return render(request, 'optionsPF/success.html', contract_attributes)
-    elif split_link == 'login':
+    elif split_link == 'login' or split_link == "register":
         contract_id = request.POST.get('contract-id')
         contract = ButterflySpread.objects.get(pk=contract_id)
         attributes = contract.return_attributes()
@@ -105,6 +106,16 @@ def butterfly(request):
                                                         attributes["strategy"])
         attributes.update({'collapsible_tag': collapsible_tag})
         ButterflySpread.objects.filter(pk=contract_id).update(collapsible_tag=collapsible_tag)
+
+        if split_link == "register":
+            print(request.POST)
+            username = request.POST.get('username')
+            password = request.POST.get('password1')
+            user = auth.authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    auth.login(request, user)
+            print(user)
         return render(request, 'optionsPF/success.html', attributes)
     else:
         return render(request, 'optionsPF/home.html')
