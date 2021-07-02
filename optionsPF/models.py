@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 import json
 
 
-
 class Portfolio(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
     strategies = JSONField()
@@ -22,6 +21,10 @@ class ButterflySpread(models.Model):
     low_strike_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
     mid_strike_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
     high_strike_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    current_low_strike_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    current_mid_strike_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    current_high_strike_contract_price = models.DecimalField(max_digits=10, decimal_places=2)
+    current_strategy_price = models.DecimalField(max_digits=10, decimal_places=2)
     strategy_price = models.DecimalField(max_digits=10, decimal_places=2)
     purchase_date = DateTimeField()
     expiry_date = DateTimeField()
@@ -32,9 +35,20 @@ class ButterflySpread(models.Model):
 
     def return_attributes(self):
         attributes = {"id": self.id, "lower_strike": self.lower_bound_strike, "midpoint_strike": self.midpoint_strike,
-                      "upper_strike": self.upper_bound_strike, "low_strike_contract_price": self.low_strike_contract_price,
+                      "upper_strike": self.upper_bound_strike,
+                      "low_strike_contract_price": self.low_strike_contract_price,
                       "mid_strike_contract_price": self.mid_strike_contract_price,
-                      "high_strike_contract_price": self.high_strike_contract_price,"strategy_price": self.strategy_price,
+                      "high_strike_contract_price": self.high_strike_contract_price,
+                      "strategy_price": self.strategy_price,
+                      "current_low_strike_contract_price": self.current_low_strike_contract_price,
+                      "current_mid_strike_contract_price": self.current_mid_strike_contract_price,
+                      "current_high_strike_contract_price": self.current_high_strike_contract_price,
+                      "low_percentage_change": ((float(self.current_low_strike_contract_price) - float(self.low_strike_contract_price)) / float(self.low_strike_contract_price)),
+                      "mid_percentage_change": ((
+                                                            float(self.current_mid_strike_contract_price) - float(self.mid_strike_contract_price)) / float(self.mid_strike_contract_price)),
+                      "high_percentage_change": ((
+                                                             float(self.current_high_strike_contract_price) - float(self.high_strike_contract_price)) / float(self.high_strike_contract_price)),
+                      "current_strategy_price": self.current_strategy_price,
                       'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
                       "num_contracts": self.num_contracts,
                       "collapsible_tag": self.collapsible_tag,
@@ -45,7 +59,9 @@ class ButterflySpread(models.Model):
         attributes = {"lower_strike": self.lower_bound_strike,
                       "low_strike_contract_price": self.low_strike_contract_price,
                       'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
-                      "contract_size": self.num_contracts, "ticker": self.ticker
+                      "contract_size": self.num_contracts, "ticker": self.ticker,
+                      "current_low_strike_contract_price": self.current_low_strike_contract_price,
+                      "low_percentage_change": self.return_attributes()["low_percentage_change"],
                       }
         return attributes
 
@@ -53,7 +69,9 @@ class ButterflySpread(models.Model):
         attributes = {"midpoint_strike": self.midpoint_strike,
                       "mid_strike_contract_price": self.mid_strike_contract_price,
                       'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
-                      "contract_size": self.num_contracts, "ticker": self.ticker
+                      "contract_size": self.num_contracts, "ticker": self.ticker,
+                      "current_mid_strike_contract_price": self.current_mid_strike_contract_price,
+                      "mid_percentage_change": self.return_attributes()["mid_percentage_change"],
                       }
         return attributes
 
@@ -61,7 +79,9 @@ class ButterflySpread(models.Model):
         attributes = {"upper_strike": self.upper_bound_strike,
                       "high_strike_contract_price": self.high_strike_contract_price,
                       'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
-                      "contract_size": self.num_contracts, "ticker": self.ticker
+                      "contract_size": self.num_contracts, "ticker": self.ticker,
+                      "current_high_strike_contract_price": self.current_high_strike_contract_price,
+                      "high_percentage_change": self.return_attributes()["high_percentage_change"],
                       }
         return attributes
 

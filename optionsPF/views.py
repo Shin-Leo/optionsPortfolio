@@ -88,8 +88,12 @@ def butterfly(request):
                                                   low_strike_contract_price=lower_contract_price,
                                                   mid_strike_contract_price=midpoint_contract_price,
                                                   high_strike_contract_price=upper_contract_price,
-                                                  strategy_price=strategy_price, purchase_date=purchase_date,
-                                                  expiry_date=expiry_date, num_contracts=num_contracts, ticker=ticker,
+                                                  current_low_strike_contract_price=lower_contract_price,
+                                                  current_mid_strike_contract_price=midpoint_contract_price,
+                                                  current_high_strike_contract_price=upper_contract_price,
+                                                  current_strategy_price=strategy_price, strategy_price=strategy_price,
+                                                  purchase_date=purchase_date, expiry_date=expiry_date,
+                                                  num_contracts=num_contracts, ticker=ticker,
                                                   collapsible_tag=collapsible_tag,
                                                   strategy_name=selected_strategy)
         contract.save()
@@ -149,8 +153,25 @@ def portfolio(request):
         contract_attributes['mid_strike_contract_price'] = float(contract_attributes['mid_strike_contract_price'])
         contract_attributes['high_strike_contract_price'] = float(contract_attributes['high_strike_contract_price'])
         contract_attributes['strategy_price'] = float(contract_attributes['strategy_price'])
+        contract_attributes['current_low_strike_contract_price'] = float(contract_attributes['current_low_strike_contract_price'])
+        contract_attributes['current_mid_strike_contract_price'] = float(contract_attributes['current_mid_strike_contract_price'])
+        contract_attributes['current_high_strike_contract_price'] = float(contract_attributes['current_high_strike_contract_price'])
+        contract_attributes['current_strategy_price'] = float(contract_attributes['current_strategy_price'])
+
         unique_contract_attributes = {string_id: contract_attributes}
         json_attributes = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
+        options_chain = get_option_chain(contract_attributes['ticker'],
+                                         contract_attributes['expiry_date'].date().strftime("%Y-%m-%d"))
+        for calls in options_chain:
+            for row in calls:
+                if row[0] == contract_attributes['low_strike_contract_price']:
+                    contract_attributes['current_low_strike_contract_price'] = row[1]
+                elif row[0] == contract_attributes['mid_strike_contract_price']:
+                    contract_attributes['current_mid_strike_contract_price'] = row[1]
+                elif row[0] == contract_attributes['high_strike_contract_price']:
+                    contract_attributes['current_high_strike_contract_price'] = row[1]
+        print(options_chain)
+        print(contract_attributes)
         try:
             user_portfolio = Portfolio.objects.create(user=request.user, strategies=json_attributes)
             user_portfolio.save()
