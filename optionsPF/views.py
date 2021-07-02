@@ -153,10 +153,10 @@ def portfolio(request):
         contract_attributes['mid_strike_contract_price'] = float(contract_attributes['mid_strike_contract_price'])
         contract_attributes['high_strike_contract_price'] = float(contract_attributes['high_strike_contract_price'])
         contract_attributes['strategy_price'] = float(contract_attributes['strategy_price'])
-        contract_attributes['current_low_strike_contract_price'] = float(contract_attributes['current_low_strike_contract_price'])
-        contract_attributes['current_mid_strike_contract_price'] = float(contract_attributes['current_mid_strike_contract_price'])
-        contract_attributes['current_high_strike_contract_price'] = float(contract_attributes['current_high_strike_contract_price'])
-        contract_attributes['current_strategy_price'] = float(contract_attributes['current_strategy_price'])
+        contract_attributes['current_low_strike_contract_price'] = 1
+        contract_attributes['current_mid_strike_contract_price'] = 1
+        contract_attributes['current_high_strike_contract_price'] = 1
+        contract_attributes['current_strategy_price'] = 1
 
         unique_contract_attributes = {string_id: contract_attributes}
         json_attributes = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)

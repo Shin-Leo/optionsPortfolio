@@ -67,4 +67,5 @@ def auth_view(request):
             else:
                 return butterfly(request)
     else:
-        return HttpResponseRedirect("Invalid username or password")
+        messages.info(request, "Enter a Valid Login")
+        return redirect("login")
