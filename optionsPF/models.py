@@ -58,30 +58,30 @@ class ButterflySpread(models.Model):
     def return_low_leg(self):
         attributes = {"lower_strike": self.lower_bound_strike,
                       "low_strike_contract_price": self.low_strike_contract_price,
-                      'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
+                      'purchase_date': self.purchase_date.date(), "expiry_date": self.expiry_date.date(),
                       "contract_size": self.num_contracts, "ticker": self.ticker,
                       "current_low_strike_contract_price": self.current_low_strike_contract_price,
-                      "low_percentage_change": self.return_attributes()["low_percentage_change"],
+                      "low_percentage_change": float(self.return_attributes()["low_percentage_change"]),
                       }
         return attributes
 
     def return_middle_leg(self):
         attributes = {"midpoint_strike": self.midpoint_strike,
                       "mid_strike_contract_price": self.mid_strike_contract_price,
-                      'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
+                      'purchase_date': self.purchase_date.date(), "expiry_date": self.expiry_date.date(),
                       "contract_size": self.num_contracts, "ticker": self.ticker,
                       "current_mid_strike_contract_price": self.current_mid_strike_contract_price,
-                      "mid_percentage_change": self.return_attributes()["mid_percentage_change"],
+                      "mid_percentage_change": float(self.return_attributes()["mid_percentage_change"]),
                       }
         return attributes
 
     def return_high_leg(self):
         attributes = {"upper_strike": self.upper_bound_strike,
                       "high_strike_contract_price": self.high_strike_contract_price,
-                      'purchase_date': self.purchase_date, "expiry_date": self.expiry_date,
+                      'purchase_date': self.purchase_date.date(), "expiry_date": self.expiry_date.date(),
                       "contract_size": self.num_contracts, "ticker": self.ticker,
                       "current_high_strike_contract_price": self.current_high_strike_contract_price,
-                      "high_percentage_change": self.return_attributes()["high_percentage_change"],
+                      "high_percentage_change": float(self.return_attributes()["high_percentage_change"]),
                       }
         return attributes
 

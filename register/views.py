@@ -56,12 +56,9 @@ def auth_view(request):
 
     user = auth.authenticate(username=username, password=password)
 
-    print("here")
-
     if user is not None:
         if user.is_active:
             auth.login(request, user)
-            print(request.POST)
             if "home-link" in request.POST:
                 return redirect("portfolio-home")
             else:

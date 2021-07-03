@@ -82,7 +82,8 @@ def butterfly(request):
         expiry_date = request.POST.get('selected-expiry')
         eastern = timezone('US/Eastern')
         purchase_date = dt.datetime.now(tz=eastern).date()
-        collapsible_tag = create_collapsible_button_tag(expiry_date, lower_strike, midpoint_strike, upper_strike, selected_strategy)
+        collapsible_tag = create_collapsible_button_tag(expiry_date, lower_strike, midpoint_strike, upper_strike,
+                                                        selected_strategy)
         contract = ButterflySpread.objects.create(lower_bound_strike=lower_strike, midpoint_strike=midpoint_strike,
                                                   upper_bound_strike=upper_strike,
                                                   low_strike_contract_price=lower_contract_price,
@@ -143,6 +144,7 @@ class DateTimeEncoder(json.JSONEncoder):
 
 
 def portfolio(request):
+    print(request.method)
     if request.method == 'POST':
         contract_id = request.POST.get('contract-id')
         user_id = uuid.uuid4()
@@ -162,39 +164,75 @@ def portfolio(request):
         json_attributes = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
         options_chain = get_option_chain(contract_attributes['ticker'],
                                          contract_attributes['expiry_date'].date().strftime("%Y-%m-%d"))
+        low_contract_price = 0
+        mid_contract_price = 0
+        high_contract_price = 0
         for calls in options_chain:
             for row in calls:
                 if row[0] == contract_attributes['low_strike_contract_price']:
-                    contract_attributes['current_low_strike_contract_price'] = row[1]
+                    low_contract_price = row[1]
                 elif row[0] == contract_attributes['mid_strike_contract_price']:
-                    contract_attributes['current_mid_strike_contract_price'] = row[1]
+                    mid_contract_price = row[1]
                 elif row[0] == contract_attributes['high_strike_contract_price']:
-                    contract_attributes['current_high_strike_contract_price'] = row[1]
+                    high_contract_price = row[1]
         print(options_chain)
         print(contract_attributes)
+        context = retrieve_butterfly_contracts(unique_contract_attributes)
         try:
             user_portfolio = Portfolio.objects.create(user=request.user, strategies=json_attributes)
             user_portfolio.save()
-            context = retrieve_butterfly_contracts(unique_contract_attributes)
             return render(request, 'optionsPF/portfolio.html', {"context": context})
         except IntegrityError or AttributeError:
             retrieved_portfolio = Portfolio.objects.get(pk=request.user)
-            existing_strategies = eval(retrieved_portfolio.strategies)
-            existing_strategies.update(unique_contract_attributes)
-            json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
-            retrieved_portfolio.strategies = json_attributes
+            if retrieved_portfolio.strategies != {}:
+                existing_strategies = eval(retrieved_portfolio.strategies)
+                existing_strategies.update(unique_contract_attributes)
+                json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
+                retrieved_portfolio.strategies = json_attributes
+                context = retrieve_butterfly_contracts(existing_strategies)
+            retrieved_portfolio.strategies = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
             retrieved_portfolio.save()
-            context = retrieve_butterfly_contracts(existing_strategies)
+            print(context)
             return render(request, 'optionsPF/portfolio.html', {"context": context})
     else:
         if request.user.is_authenticated:
-            retrieved_portfolio = Portfolio.objects.get(pk=request.user)
-            existing_strategies = eval(retrieved_portfolio.strategies)
-            json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
-            retrieved_portfolio.strategies = json_attributes
-            retrieved_portfolio.save()
-            context = retrieve_butterfly_contracts(existing_strategies)
-            return render(request, 'optionsPF/portfolio.html', {"context": context})
+            try:
+                user_portfolio = Portfolio.objects.create(user=request.user, strategies={})
+                user_portfolio.save()
+                return render(request, 'optionsPF/portfolio.html')
+            except IntegrityError or TypeError:
+                retrieved_portfolio = Portfolio.objects.get(pk=request.user)
+                if retrieved_portfolio.strategies != {}:
+                    existing_strategies = eval(retrieved_portfolio.strategies)
+                    json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
+                    print(json_attributes)
+                    retrieved_portfolio.strategies = json_attributes
+                    retrieved_portfolio.save()
+                    context = retrieve_butterfly_contracts(existing_strategies)
+
+                    for key, value in context.items():
+                        ticker = value[0]["ticker"]
+                        date = value[0]["expiry_date"]
+                        # add exception for if the current date is after expiry date
+                        options_chain = get_option_chain(ticker,
+                                                         date.strftime("%Y-%m-%d"))
+                        low_contract_price = 0
+                        mid_contract_price = 0
+                        high_contract_price = 0
+                        for calls in options_chain:
+                            for row in calls:
+                                if row[0] == value[0]['low_strike_contract_price']:
+                                    low_contract_price = row[1]
+                                elif row[0] == value[1]['mid_strike_contract_price']:
+                                    mid_contract_price = row[1]
+                                elif row[0] == value[2]['high_strike_contract_price']:
+                                    high_contract_price = row[1]
+                        value[0]["current_low_strike_contract_price"] = low_contract_price
+                        value[1]["current_mid_strike_contract_price"] = mid_contract_price
+                        value[2]["current_high_strike_contract_price"] = high_contract_price
+                        return render(request, 'optionsPF/portfolio.html', {"context": context})
+                else:
+                    return render(request, 'optionsPF/portfolio.html')
 
 
 def retrieve_butterfly_contracts(strategies):
@@ -206,6 +244,18 @@ def retrieve_butterfly_contracts(strategies):
                 low_contract = butterfly_object.return_low_leg()
                 mid_contract = butterfly_object.return_middle_leg()
                 high_contract = butterfly_object.return_high_leg()
+                current_low_strike_contract_price = low_contract.pop("current_low_strike_contract_price")
+                current_mid_strike_contract_price = mid_contract.pop("current_mid_strike_contract_price")
+                current_high_strike_contract_price = high_contract.pop("current_high_strike_contract_price")
+                low_contract["Contract Value"] = ((current_low_strike_contract_price
+                                                   - low_contract['low_strike_contract_price'])
+                                                  * low_contract['contract_size'])
+                mid_contract["Contract Value"] = ((current_mid_strike_contract_price
+                                                   - mid_contract['mid_strike_contract_price'])
+                                                  * mid_contract['contract_size'])
+                high_contract["Contract Value"] = ((current_high_strike_contract_price
+                                                    - high_contract['high_strike_contract_price'])
+                                                   * high_contract['contract_size'])
                 tag = butterfly_object.return_collapsible_tag()
                 context.update({tag: [low_contract, mid_contract, high_contract]})
                 break
