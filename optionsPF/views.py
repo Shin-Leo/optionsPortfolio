@@ -32,7 +32,7 @@ def dates(request):
                 if option_expiry_dates:
                     option_expiry_dates_list = list(option_expiry_dates)
                     context = {'option_expiry_dates_list': option_expiry_dates_list,
-                               'ticker': user_input, 'strategies': options_strategies}
+                               'ticker': user_input.upper(), 'strategies': options_strategies}
                     return render(request, 'optionsPF/date.html', context)
             else:
                 messages.info(request, "Enter a Valid Stock Ticker")
@@ -51,13 +51,15 @@ def search(request):
         strategy = request.POST.get('selected-strategy', None)
         strategy = strategy.replace(" ", "-")
         option_chain = get_option_chain(ticker, date)
-        print(get_stock_price(ticker))
+        print(strategy)
         stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
                    'strategies': option_chain[2], 'price': stock_price,
                    'strategy': strategy, 'ticker': ticker, 'date': date}
         if strategy == 'Butterfly':
             return render(request, 'optionsPF/butterfly.html', context)
+        elif strategy == 'Iron-Condor':
+            return render(request, 'optionsPF/iron_condor.html', context)
         else:
             return render(request, 'optionsPF/date.html')
     else:
