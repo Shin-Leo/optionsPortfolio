@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+
+<style>
+    .chart-container {
+        width: 50%;
+        height: 50%;
+        margin: auto;
+    }
+</style>
+
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card" >
+                    <div class="card-body">
+                        <div class="card chart-container" style="position: relative; height:40vh; width:80vw">
+                            <canvas id="chart1"></canvas>
+                        </div>
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card" >
+                    <div class="card-body">
+                        <div class="card chart-container" style="position: relative; height:40vh; width:80vw">
+                            <canvas id="chart2"></canvas>
+                        </div>
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const labels = [
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+        ' ',
+    ];
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Long Butterfly Call',
+            backgroundColor: 'rgb(73,114,126)',
+            borderColor: 'rgb(85,117,159)',
+            data: [-30, -30, -30, 60, 150, 60, -30, -30, -30,],
+        }]
+    };
+    const config = {
+        type: 'line',
+        data,
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: "underlying price"
+
+                    },
+                    grid: {
+                        display: false
+                    }
+                    ,
+                    ticks: {
+                        major: {
+                            enabled: true
+                        },
+                        display: true
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'profit / loss'
+
+                    },
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+        },
+    }
+
+
+    let chart1 = new Chart(
+        document.getElementById('chart1'),
+        config
+    );
+    let chart2 = new Chart(
+        document.getElementById('chart2'),
+        config
+    );
+
+
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ urlpatterns = [
     path('butterfly/', views.butterfly, name='portfolio-butterfly'),
     path('portfolio/', views.portfolio, name='portfolio-user'),
     path('pre_login/', v.pre_login, name='register-pre-login'),
+    path('strategies/', views.strategies, name='portfolio-strategies'),
     url(r'^butterfly$', views.butterfly, name='get-butterfly'),
 ]
 

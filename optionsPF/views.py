@@ -262,3 +262,7 @@ def retrieve_butterfly_contracts(strategies):
                 context.update({tag: [low_contract, mid_contract, high_contract]})
                 break
     return context
+
+
+def strategies(request):
+    return render(request, 'optionsPF/strategies.html')
