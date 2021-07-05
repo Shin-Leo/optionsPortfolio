@@ -1,0 +1,31 @@
+{
+  "name": "optionsportfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shin-Leo/optionsPortfolio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shin-Leo/optionsPortfolio/issues"
+  },
+  "homepage": "https://github.com/Shin-Leo/optionsPortfolio#readme",
+  "dependencies": {
+    "chartjs-plugin-annotation": "^1.0.2",
+    "node": "^16.4.0",
+    "rollup": "^2.52.7",
+    "rollup-plugin-commonjs": "^10.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "chart.js": "^3.4.1",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
