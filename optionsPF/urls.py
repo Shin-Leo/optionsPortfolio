@@ -10,12 +10,13 @@ from django.conf import settings
 urlpatterns = [
     path('', views.home, name='portfolio-home'),
     path('about/', views.about, name='portfolio-about'),
-    path('search/', views.search, name='portfolio-search'),
+    path('strategies/', views.strategies, name='portfolio-strategies'),
     path('dates/', views.dates, name='portfolio-dates'),
     path('butterfly/', views.butterfly, name='portfolio-butterfly'),
     path('portfolio/', views.portfolio, name='portfolio-user'),
     path('pre_login/', v.pre_login, name='register-pre-login'),
-    path('strategies/', views.strategies, name='portfolio-strategies'),
+    path('strategy/', views.strategy, name='portfolio-strategy'),
+    path('search/', views.search, name='portfolio-search'),
     url(r'^butterfly$', views.butterfly, name='get-butterfly'),
 ]
 

@@ -1,48 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        .navbar {
+            margin-left: 10px;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+        }
+
+        .navbar {
+            border-bottom: 2px solid #3f4b5b;
+        }
+
+        #form-table {
+            height: 85%;
+        }
+
+        .row {
+            height: 70px;
+            width: 800px;
+        }
+
+    </style>
 </head>
 <body>
-<form method="POST" action="/search/">
+<form method="POST" action="/strategies/" id="form-table">
     {% csrf_token %}
-    <div class="input-group">
-      <span class="input-group-text">Selected Ticker</span>
-      <input type="text" aria-label="First name" class="form-control"
-             name="textfield" value={{ ticker }} readonly class="form-control-plaintext">
-    </div>
-    <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">Select an Expiry Date</label>
-        <select id="inputGroupSelect01" name="selected-date" class="form-select">
-            {% for i in option_expiry_dates_list %}
-                {% if forloop.first %}
-                    <option selected value="{{ i }}">{{ i }}</option>
+    <nav class="navbar navbar-light navbar-expand-md bg-faded">
+        <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex w-90 mr-auto">Options Portfolio Builder</a>
+            </button>
+            <ul class="nav navbar-nav navbar-right ">
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a class="navbar-brand " href="">
+                            <img src="/static/optionsPF/key-icon.svg" alt="" width="20" height="20"
+                                 class="d-inline-block align-text-top">
+                            <span></span> {{ user.username }}
+                        </a>
+                    {% else %}
+                        <a class="navbar-brand " href="login">
+                            <img src="/static/optionsPF/key-icon.svg" alt="" width="20" height="20"
+                                 class="d-inline-block align-text-top">
+                            <span></span> Log In
+                        </a>
+                    {% endif %}
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="portfolio" id="portfolio-authenticated">
+                            <img src="/static/optionsPF/portfolio-icon.svg" alt="" width="20" height="20"
+                                 class="d-inline-block align-text-top">
+                            <span></span> Portfolio
+                        </a>
+                    </li>
                 {% else %}
-                    <option value="{{ i }}">{{ i }}</option>
+                    <li class="nav-item">
+                        <a class="navbar-brand " href="/login" id="portfolio-unauthenticated"
+                           onclick="add_unauthenticated_info()">
+                            <img src="/static/optionsPF/portfolio-icon.svg" alt="" width="20" height="20"
+                                 class="d-inline-block align-text-top">
+                            <span></span> Portfolio
+                        </a>
+                    </li>
                 {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">Select an Options Strategy</label>
-        <select id="inputGroupSelect01" name="selected-strategy" class="form-select">
-            {% for i in strategies %}
-                {% if forloop.first %}
-                    <option selected value="{{ i }}">{{ i }}</option>
-                {% else %}
-                    <option value="{{ i }}">{{ i }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+            </ul>
+
+        </div>
+    </nav>
+    <div class="container-fluid d-flex h-100 justify-content-center align-self-center">
+        <div class="row justify-content-center align-self-center">
+            <div class="input-group">
+                <span class="input-group-text">Selected Ticker</span>
+                <input type="text" aria-label="First name" class="form-control"
+                       name="textfield" value={{ ticker }} readonly class="form-control-plaintext">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Select an Expiry Date</span>
+                <select id="inputGroupSelect01" name="selected-date" class="form-select">
+                    {% for i in option_expiry_dates_list %}
+                        {% if forloop.first %}
+                            <option selected value="{{ i }}">{{ i }}</option>
+                        {% else %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-secondary">Submit</button>
+            </div>
+        </div>
+        <input type="hidden" name="selected-ticker" value={{ ticker }}>
+    <input type="hidden" name="selected-expiry" value={{ date }}>
     </div>
     {% csrf_token %}
-    <button type="submit" class="btn btn-secondary">Submit</button>
 </form>
 </body>
 </html>

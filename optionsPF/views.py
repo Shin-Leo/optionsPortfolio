@@ -44,21 +44,40 @@ def dates(request):
         return render(request, 'optionsPF/home.html')
 
 
-def search(request):
+def strategies(request):
     if request.method == 'POST':
         ticker = request.POST.get('textfield', None)
         date = request.POST.get('selected-date', None)
-        strategy = request.POST.get('selected-strategy', None)
-        strategy = strategy.replace(" ", "-")
+        context = {"ticker": ticker,
+                   "date": date}
+        return render(request, 'optionsPF/strategies.html', context)
+        # option_chain = get_option_chain(ticker, date)
+        # stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
+        # context = {'calls': option_chain[0], 'puts': option_chain[1],
+        #            'strategies': option_chain[2], 'price': stock_price,
+        #            'strategy': strategy, 'ticker': ticker, 'date': date}
+        # if strategy == 'Butterfly':
+        #     return render(request, 'optionsPF/butterfly.html', context)
+        # elif strategy == 'Iron-Condor':
+        #     return render(request, 'optionsPF/iron_condor.html', context)
+        # else:
+        #     return render(request, 'optionsPF/date.html')
+    else:
+        return render(request, 'optionsPF/home.html')
+
+
+def search(request):
+    if request.method == 'POST':
+        ticker = request.POST.get('selected-ticker')
+        date = request.POST.get('selected-expiry')
         option_chain = get_option_chain(ticker, date)
-        print(strategy)
         stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
                    'strategies': option_chain[2], 'price': stock_price,
                    'strategy': strategy, 'ticker': ticker, 'date': date}
-        if strategy == 'Butterfly':
+        if "butterfly-button" in request.POST:
             return render(request, 'optionsPF/butterfly.html', context)
-        elif strategy == 'Iron-Condor':
+        elif "condor-button" in request.POST:
             return render(request, 'optionsPF/iron_condor.html', context)
         else:
             return render(request, 'optionsPF/date.html')
@@ -69,7 +88,6 @@ def search(request):
 def butterfly(request):
     referrer_link = request.META.get('HTTP_REFERER')
     split_link = str(referrer_link).split('/')[3]
-    print(split_link)
     if request.method == 'POST' and split_link == 'search':
         lower_strike = request.POST.get('low-strike')
         midpoint_strike = request.POST.get('mid-strike')
@@ -115,14 +133,12 @@ def butterfly(request):
         ButterflySpread.objects.filter(pk=contract_id).update(collapsible_tag=collapsible_tag)
 
         if split_link == "register":
-            print(request.POST)
             username = request.POST.get('username')
             password = request.POST.get('password1')
             user = auth.authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     auth.login(request, user)
-            print(user)
         return render(request, 'optionsPF/success.html', attributes)
     else:
         return render(request, 'optionsPF/home.html')
@@ -146,7 +162,6 @@ class DateTimeEncoder(json.JSONEncoder):
 
 
 def portfolio(request):
-    print(request.method)
     if request.method == 'POST':
         contract_id = request.POST.get('contract-id')
         user_id = uuid.uuid4()
@@ -177,8 +192,7 @@ def portfolio(request):
                     mid_contract_price = row[1]
                 elif row[0] == contract_attributes['high_strike_contract_price']:
                     high_contract_price = row[1]
-        print(options_chain)
-        print(contract_attributes)
+
         context = retrieve_butterfly_contracts(unique_contract_attributes)
         try:
             user_portfolio = Portfolio.objects.create(user=request.user, strategies=json_attributes)
@@ -194,7 +208,6 @@ def portfolio(request):
                 context = retrieve_butterfly_contracts(existing_strategies)
             retrieved_portfolio.strategies = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
             retrieved_portfolio.save()
-            print(context)
             return render(request, 'optionsPF/portfolio.html', {"context": context})
     else:
         if request.user.is_authenticated:
@@ -207,7 +220,6 @@ def portfolio(request):
                 if retrieved_portfolio.strategies != {}:
                     existing_strategies = eval(retrieved_portfolio.strategies)
                     json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
-                    print(json_attributes)
                     retrieved_portfolio.strategies = json_attributes
                     retrieved_portfolio.save()
                     context = retrieve_butterfly_contracts(existing_strategies)
@@ -264,5 +276,5 @@ def retrieve_butterfly_contracts(strategies):
     return context
 
 
-def strategies(request):
+def strategy(request):
     return render(request, 'optionsPF/strategies.html')
