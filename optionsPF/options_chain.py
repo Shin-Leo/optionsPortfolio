@@ -76,6 +76,8 @@ def get_stock_price(ticker):
         date_time = date_time.date() - timedelta(days=1)
         retrieved_date = date_time
         time = "15:47"
+    else:
+        time = "15:47"
     data = yf.download(ticker, start=retrieved_date, interval="15m")
     string_time = data.index.astype(str).str[11:16]
     interval = choose_stock_interval(time, string_time)
@@ -95,7 +97,7 @@ def choose_stock_interval(time, times_column):
         mins = int(interval.split(':')[1])
         if current_hour == hour and round_down(current_mins) == mins:
             return interval
-    return '16:00'
+    return '15:45'
 
 
 def round_down(mins):

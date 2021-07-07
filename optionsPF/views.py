@@ -71,9 +71,9 @@ def search(request):
         ticker = request.POST.get('selected-ticker')
         date = request.POST.get('selected-expiry')
         option_chain = get_option_chain(ticker, date)
-        stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
+        # stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
-                   'strategies': option_chain[2], 'price': stock_price,
+                   'strategies': option_chain[2], 'price': 0,
                    'strategy': strategy, 'ticker': ticker, 'date': date}
         if "butterfly-button" in request.POST:
             return render(request, 'optionsPF/butterfly.html', context)
