@@ -71,9 +71,9 @@ def search(request):
         ticker = request.POST.get('selected-ticker')
         date = request.POST.get('selected-expiry')
         option_chain = get_option_chain(ticker, date)
-        # stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
+        stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
         context = {'calls': option_chain[0], 'puts': option_chain[1],
-                   'strategies': option_chain[2], 'price': 0,
+                   'strategies': option_chain[2], 'price': stock_price,
                    'strategy': strategy, 'ticker': ticker, 'date': date}
         if "butterfly-button" in request.POST:
             return render(request, 'optionsPF/butterfly.html', context)
@@ -261,15 +261,15 @@ def retrieve_butterfly_contracts(strategies):
                 current_low_strike_contract_price = low_contract.pop("current_low_strike_contract_price")
                 current_mid_strike_contract_price = mid_contract.pop("current_mid_strike_contract_price")
                 current_high_strike_contract_price = high_contract.pop("current_high_strike_contract_price")
-                low_contract["Contract Value"] = ((current_low_strike_contract_price
-                                                   - low_contract['low_strike_contract_price'])
-                                                  * low_contract['contract_size'])
-                mid_contract["Contract Value"] = ((current_mid_strike_contract_price
-                                                   - mid_contract['mid_strike_contract_price'])
-                                                  * mid_contract['contract_size'])
-                high_contract["Contract Value"] = ((current_high_strike_contract_price
-                                                    - high_contract['high_strike_contract_price'])
-                                                   * high_contract['contract_size'])
+                low_contract["Contract Value"] = '$' + str(float((current_low_strike_contract_price
+                                                  * low_contract['contract_size'])) + (100
+                                                 * float(get_stock_price(low_contract['ticker']))))
+                mid_contract["Contract Value"] = '$' + str(float((current_mid_strike_contract_price
+                                                  * mid_contract['contract_size'])) + (100
+                                                 * float(get_stock_price(low_contract['ticker']))))
+                high_contract["Contract Value"] = '$' + str((float((current_high_strike_contract_price
+                                                   * high_contract['contract_size'])) + (100
+                                                 * float(get_stock_price(low_contract['ticker'])))))
                 tag = butterfly_object.return_collapsible_tag()
                 context.update({tag: [low_contract, mid_contract, high_contract]})
                 break
