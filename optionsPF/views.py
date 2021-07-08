@@ -202,11 +202,12 @@ def portfolio(request):
             retrieved_portfolio = Portfolio.objects.get(pk=request.user)
             if retrieved_portfolio.strategies != {}:
                 existing_strategies = eval(retrieved_portfolio.strategies)
-                existing_strategies.update(unique_contract_attributes)
+                existing_strategies[list(unique_contract_attributes.keys())[0]] = list(unique_contract_attributes.values())[0]
                 json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
                 retrieved_portfolio.strategies = json_attributes
                 context = retrieve_butterfly_contracts(existing_strategies)
-            retrieved_portfolio.strategies = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
+            else:
+                retrieved_portfolio.strategies = json.dumps(unique_contract_attributes, cls=DateTimeEncoder)
             retrieved_portfolio.save()
             return render(request, 'optionsPF/portfolio.html', {"context": context})
     else:
