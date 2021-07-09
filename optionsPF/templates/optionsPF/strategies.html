@@ -69,9 +69,7 @@
                 font-weight: bold;
             }
         }
-        canvas {
-            width: 18rem;
-        }
+
     </style>
 </head>
 <body>
@@ -123,9 +121,96 @@
     {% csrf_token %}
     <div class="container">
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+    <div class="row">
         <div class="col mb-4">
-            <div class="card px-5 " style="width: 20rem;">
+            <div class="card mx-lg-5 " style="width: 26rem;">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="">Long Call</a>
+                        </li>
+                        <li class="nav-item">
+                             <a class="nav-link" href="#">Short Call</a>
+                        </li>
+                        <li class="nav-item">
+                             <a class="nav-link" href="#">Long Put</a>
+                        </li>
+                        <li class="nav-item">
+                             <a class="nav-link" href="#">Long Put</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="card chart-container" style="position: relative; height:26vh">
+                        <canvas id="chart1"></canvas>
+                    </div>
+                    <h6 class="card-title">Long Call Butterfly Spread</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the
+                        bulk
+                        of
+                        the card's content.</p>
+                    <button type="submit" class="btn btn-primary" name="butterfly-button">Select</button>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card mx-lg-5" style="width: 25rem;">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="">Active</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1"
+                               aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="card chart-container" style="position: relative; height:26vh;">
+                        <canvas id="chart2"></canvas>
+                    </div>
+                    <h5 class="card-title">Iron Condor</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                        of
+                        the card's content.</p>
+                    <button type="submit" class="btn btn-primary" name="condor-button">Select</button>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card mx-lg-5 " style="width: 25rem;">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Active</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1"
+                               aria-disabled="true">Disabled</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="card chart-container" style="position: relative; height:26vh;">
+                        <canvas id="chart2"></canvas>
+                    </div>
+                    <h5 class="card-title">Iron Condor</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                        of
+                        the card's content.</p>
+                    <button type="submit" class="btn btn-primary" name="condor-button">Select</button>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card mx-lg-5" style="width: 25rem;">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
@@ -154,92 +239,7 @@
             </div>
         </div>
         <div class="col mb-4">
-            <div class="card px-5" style="width: 20rem;">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Active</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1"
-                               aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <div class="card chart-container" style="position: relative; height:26vh;">
-                        <canvas id="chart2"></canvas>
-                    </div>
-                    <h5 class="card-title">Iron Condor</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                        of
-                        the card's content.</p>
-                    <button type="submit" class="btn btn-primary" name="condor-button">Select</button>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card px-5 " style="width: 20rem;">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Active</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1"
-                               aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <div class="card chart-container" style="position: relative; height:26vh;">
-                        <canvas id="chart2"></canvas>
-                    </div>
-                    <h5 class="card-title">Iron Condor</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                        of
-                        the card's content.</p>
-                    <button type="submit" class="btn btn-primary" name="condor-button">Select</button>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card px-5" style="width: 20rem;">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Active</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1"
-                               aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <div class="card chart-container" style="position: relative; height:26vh">
-                        <canvas id="chart1"></canvas>
-                    </div>
-                    <h6 class="card-title">Long Call Butterfly Spread</h6>
-                    <p class="card-text">Some quick example text to build on the card title and make up the
-                        bulk
-                        of
-                        the card's content.</p>
-                    <button type="submit" class="btn btn-primary" name="butterfly-button">Select</button>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card px-5" style="width: 20rem;">
+            <div class="card mx-lg-5" style="width: 25rem;">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
@@ -267,7 +267,7 @@
             </div>
         </div>
         <div class="col mb-4">
-            <div class="card px-5" style="width: 20rem;">
+            <div class="card mx-lg-5" style="width: 25rem;">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
@@ -299,6 +299,8 @@
     <input type="hidden" name="selected-ticker" value={{ ticker }}>
     <input type="hidden" name="selected-expiry" value={{ date }}>
     {% csrf_token %}
+    </div>
+    </div>
 </form>
 </body>
 </html>
