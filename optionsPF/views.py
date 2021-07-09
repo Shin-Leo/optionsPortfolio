@@ -51,17 +51,17 @@ def strategies(request):
         context = {"ticker": ticker,
                    "date": date}
         return render(request, 'optionsPF/strategies.html', context)
-        # option_chain = get_option_chain(ticker, date)
-        # stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
-        # context = {'calls': option_chain[0], 'puts': option_chain[1],
-        #            'strategies': option_chain[2], 'price': stock_price,
-        #            'strategy': strategy, 'ticker': ticker, 'date': date}
-        # if strategy == 'Butterfly':
-        #     return render(request, 'optionsPF/butterfly.html', context)
-        # elif strategy == 'Iron-Condor':
-        #     return render(request, 'optionsPF/iron_condor.html', context)
-        # else:
-        #     return render(request, 'optionsPF/date.html')
+        option_chain = get_option_chain(ticker, date)
+        stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
+        context = {'calls': option_chain[0], 'puts': option_chain[1],
+                   'strategies': option_chain[2], 'price': stock_price,
+                   'strategy': strategy, 'ticker': ticker, 'date': date}
+        if strategy == 'Butterfly':
+            return render(request, 'optionsPF/butterfly.html', context)
+        elif strategy == 'Iron-Condor':
+            return render(request, 'optionsPF/iron_condor.html', context)
+        else:
+            return render(request, 'optionsPF/date.html')
     else:
         return render(request, 'optionsPF/home.html')
 
