@@ -51,17 +51,17 @@ def strategies(request):
         context = {"ticker": ticker,
                    "date": date}
         return render(request, 'optionsPF/strategies.html', context)
-        option_chain = get_option_chain(ticker, date)
-        stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
-        context = {'calls': option_chain[0], 'puts': option_chain[1],
-                   'strategies': option_chain[2], 'price': stock_price,
-                   'strategy': strategy, 'ticker': ticker, 'date': date}
-        if strategy == 'Butterfly':
-            return render(request, 'optionsPF/butterfly.html', context)
-        elif strategy == 'Iron-Condor':
-            return render(request, 'optionsPF/iron_condor.html', context)
-        else:
-            return render(request, 'optionsPF/date.html')
+        # option_chain = get_option_chain(ticker, date)
+        # stock_price = str(get_stock_price(ticker)).replace("[", "").replace("]", "")
+        # context = {'calls': option_chain[0], 'puts': option_chain[1],
+        #            'strategies': option_chain[2], 'price': stock_price,
+        #            'strategy': strategy, 'ticker': ticker, 'date': date}
+        # if strategy == 'Butterfly':
+        #     return render(request, 'optionsPF/butterfly.html', context)
+        # elif strategy == 'Iron-Condor':
+        #     return render(request, 'optionsPF/iron_condor.html', context)
+        # else:
+        #     return render(request, 'optionsPF/date.html')
     else:
         return render(request, 'optionsPF/home.html')
 
@@ -202,7 +202,8 @@ def portfolio(request):
             retrieved_portfolio = Portfolio.objects.get(pk=request.user)
             if retrieved_portfolio.strategies != {}:
                 existing_strategies = eval(retrieved_portfolio.strategies)
-                existing_strategies[list(unique_contract_attributes.keys())[0]] = list(unique_contract_attributes.values())[0]
+                existing_strategies[list(unique_contract_attributes.keys())[0]] = \
+                    list(unique_contract_attributes.values())[0]
                 json_attributes = json.dumps(existing_strategies, cls=DateTimeEncoder)
                 retrieved_portfolio.strategies = json_attributes
                 context = retrieve_butterfly_contracts(existing_strategies)
@@ -229,23 +230,27 @@ def portfolio(request):
                         ticker = value[0]["ticker"]
                         date = value[0]["expiry_date"]
                         # add exception for if the current date is after expiry date
-                        options_chain = get_option_chain(ticker,
-                                                         date.strftime("%Y-%m-%d"))
-                        low_contract_price = 0
-                        mid_contract_price = 0
-                        high_contract_price = 0
-                        for calls in options_chain:
-                            for row in calls:
-                                if row[0] == value[0]['low_strike_contract_price']:
-                                    low_contract_price = row[1]
-                                elif row[0] == value[1]['mid_strike_contract_price']:
-                                    mid_contract_price = row[1]
-                                elif row[0] == value[2]['high_strike_contract_price']:
-                                    high_contract_price = row[1]
-                        value[0]["current_low_strike_contract_price"] = low_contract_price
-                        value[1]["current_mid_strike_contract_price"] = mid_contract_price
-                        value[2]["current_high_strike_contract_price"] = high_contract_price
-                        return render(request, 'optionsPF/portfolio.html', {"context": context})
+                        try:
+                            options_chain = get_option_chain(ticker,
+                                                             date.strftime("%Y-%m-%d"))
+                            low_contract_price = 0
+                            mid_contract_price = 0
+                            high_contract_price = 0
+                            for calls in options_chain:
+                                for row in calls:
+                                    if row[0] == value[0]['low_strike_contract_price']:
+                                        low_contract_price = row[1]
+                                    elif row[0] == value[1]['mid_strike_contract_price']:
+                                        mid_contract_price = row[1]
+                                    elif row[0] == value[2]['high_strike_contract_price']:
+                                        high_contract_price = row[1]
+                            value[0]["current_low_strike_contract_price"] = low_contract_price
+                            value[1]["current_mid_strike_contract_price"] = mid_contract_price
+                            value[2]["current_high_strike_contract_price"] = high_contract_price
+                        except ValueError:
+                            del context[key]
+                            break
+                    return render(request, 'optionsPF/portfolio.html', {"context": context})
                 else:
                     return render(request, 'optionsPF/portfolio.html')
 
@@ -259,19 +264,26 @@ def retrieve_butterfly_contracts(strategies):
                 low_contract = butterfly_object.return_low_leg()
                 mid_contract = butterfly_object.return_middle_leg()
                 high_contract = butterfly_object.return_high_leg()
+
+                get_option_chain(ticker=low_contract['ticker'], date=str(low_contract["expiry_date"]))
                 current_low_strike_contract_price = low_contract.pop("current_low_strike_contract_price")
+                print(current_low_strike_contract_price - low_contract["low_strike_contract_price"])
                 current_mid_strike_contract_price = mid_contract.pop("current_mid_strike_contract_price")
                 current_high_strike_contract_price = high_contract.pop("current_high_strike_contract_price")
                 low_contract["Contract Value"] = '$' + str(float((current_low_strike_contract_price
-                                                  * low_contract['contract_size'])) + (100
-                                                 * float(get_stock_price(low_contract['ticker']))))
+                                                                  * low_contract['contract_size'])) * 100)
                 mid_contract["Contract Value"] = '$' + str(float((current_mid_strike_contract_price
-                                                  * mid_contract['contract_size'])) + (100
-                                                 * float(get_stock_price(low_contract['ticker']))))
+                                                                  * mid_contract['contract_size'])) * 100)
                 high_contract["Contract Value"] = '$' + str((float((current_high_strike_contract_price
-                                                   * high_contract['contract_size'])) + (100
-                                                 * float(get_stock_price(low_contract['ticker'])))))
+                                                                    * high_contract['contract_size']))) * 100)
+                low_contract["low_percentage_change"] = (current_low_strike_contract_price - low_contract[
+                    "low_strike_contract_price"]) / low_contract["low_strike_contract_price"]
+                mid_contract["mid_percentage_change"] = (current_mid_strike_contract_price - mid_contract[
+                    "mid_strike_contract_price"]) / mid_contract["mid_strike_contract_price"]
+                high_contract["high_percentage_change"] = (current_high_strike_contract_price - high_contract[
+                    "high_strike_contract_price"]) / high_contract["high_strike_contract_price"]
                 tag = butterfly_object.return_collapsible_tag()
+                print(mid_contract["mid_percentage_change"])
                 context.update({tag: [low_contract, mid_contract, high_contract]})
                 break
     return context
