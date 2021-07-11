@@ -58,7 +58,7 @@ const dataLongStraddle = {
             label: 'Long Straddle',
             backgroundColor: 'rgb(73,114,126)',
             borderColor: 'rgb(85,117,159)',
-            data: [60, 60, 60, 0, -60, 0, 60, 60, 60],
+            data: [60, 30, 0, -30, -60, -30, 0, 30, 60],
             fill: false,
             radius: 0
         }]
@@ -72,7 +72,7 @@ const dataShortStraddle = {
             label: 'Short Straddle',
             backgroundColor: 'rgb(73,114,126)',
             borderColor: 'rgb(85,117,159)',
-            data: [60, 60, 60, 0, -60, 0, 60, 60, 60],
+            data: [-60, -30, 0, 30, 60, 30, 0, -30, -60],
             fill: false,
             radius: 0
         }]
@@ -85,7 +85,7 @@ const dataLongStrangle = {
             label: 'Long Strangle',
             backgroundColor: 'rgb(73,114,126)',
             borderColor: 'rgb(85,117,159)',
-            data: [60, 60, 60, 0, -60, 0, 60, 60, 60],
+            data: [60, 0, -60, -60, -60, -60, -60, 0, 60],
             fill: false,
             radius: 0
         }]
@@ -98,14 +98,14 @@ const dataShortStrangle = {
             label: 'Short Strangle',
             backgroundColor: 'rgb(73,114,126)',
             borderColor: 'rgb(85,117,159)',
-            data: [60, 60, 60, 0, -60, 0, 60, 60, 60],
+            data: [-60, 0, 60, 60, 60, 60, 60, 0, -60],
             fill: false,
             radius: 0
         }]
 
 };
 
-const dataCondor = {
+const dataLongCondor = {
     labels: labels,
     datasets: [
         {
@@ -113,6 +113,19 @@ const dataCondor = {
             backgroundColor: 'rgb(73,114,126)',
             borderColor: 'rgb(85,117,159)',
             data: [-30, -30, -30, 60, 60, 60, -30, -30, -30,],
+            fill: false,
+                radius: 0
+
+        }],
+};
+const dataShortCondor = {
+    labels: labels,
+    datasets: [
+        {
+            label: 'Long Butterfly Call',
+            backgroundColor: 'rgb(73,114,126)',
+            borderColor: 'rgb(85,117,159)',
+            data: [30, 30, -15, -60, -60, -60, -15, 30, 30,],
             fill: false,
                 radius: 0
 
@@ -205,7 +218,7 @@ const butterflyConfig = {
 }
 const condorConfig = {
     type: 'line',
-    data: dataCondor,
+    data: dataLongCondor,
     options: {
         plugins: {
             autocolors: false,
@@ -291,7 +304,7 @@ const condorConfig = {
 }
 const strangleConfig = {
     type: 'line',
-    data: dataLongStraddle,
+    data: dataLongStrangle,
     options: {
         plugins: {
             autocolors: false,
@@ -483,10 +496,22 @@ let straddleChart = new Chart(
 
 let lcbButton = document.getElementById("long-call-butterfly")
 let scbButton = document.getElementById("short-call-butterfly")
+let longStrangleButton = document.getElementById("long-strangle")
+let shortStrangleButton = document.getElementById("short-strangle")
+let longCondorButton = document.getElementById("long-condor")
+let shortCondorButton = document.getElementById("short-condor")
+let longStraddleButton = document.getElementById("long-straddle")
+let shortStraddleButton = document.getElementById("short-straddle")
 
 
 lcbButton.addEventListener('click', updateChart)
 scbButton.addEventListener('click', updateChart)
+longStrangleButton.addEventListener('click', updateChart)
+shortStrangleButton.addEventListener('click', updateChart)
+longCondorButton.addEventListener('click', updateChart)
+shortCondorButton.addEventListener('click', updateChart)
+longStraddleButton.addEventListener('click', updateChart)
+shortStraddleButton.addEventListener('click', updateChart)
 
 function updateChart() {
     console.log(this.attributes.id.value)
@@ -501,6 +526,24 @@ function updateChart() {
     } else if ( id === "long-call-butterfly") {
         butterflyChart.config.data = dataLongCallButterfly;
         butterflyChart.update()
+    } else if (id === "short-strangle") {
+        strangleChart.config.data = dataShortStrangle;
+        strangleChart.update()
+    } else if (id === "long-strangle") {
+        strangleChart.config.data = dataLongStrangle;
+        strangleChart.update()
+    } else if (id === "long-condor") {
+        condorChart.config.data = dataLongCondor;
+        condorChart.update()
+    } else if (id === "short-condor") {
+        condorChart.config.data = dataShortCondor;
+        condorChart.update()
+    } else if (id === "long-straddle") {
+        straddleChart.config.data = dataLongStraddle;
+        straddleChart.update()
+    } else if (id === "short-straddle") {
+        straddleChart.config.data = dataShortStraddle;
+        straddleChart.update()
     }
 }
 
