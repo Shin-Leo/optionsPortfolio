@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="/static/optionsPF/script.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/optionsPF/scroll-table.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="row">
+        <div id="scroll-table">
+            <div class="column">
+                <table style="float: left;" id="call-table" class="table table-hover">
+                    <thead class="table-header">
+                    <tr class="table-header1">
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>Calls</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    <tr class="table-header2">
+                        <th>Strike</th>
+                        <th>Last Price</th>
+                        <th>Bid</th>
+                        <th>Ask</th>
+                        <th>Volume</th>
+                        <th>Open Int.</th>
+                        <th>Implied Volatility</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in calls %}
+                        <tr> {% for j in i %}
+                            <td>{{ j }}</td>
+                        {% endfor %}</tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="scroll-table">
+            <div class="column">
+
+                <table style="float: left;" id="put-table" class="table table-hover">
+                    <thead class="table-header">
+                    <tr class="table-header1">
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>Puts</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    <tr class="table-header2">
+                        <th>Strike</th>
+                        <th>Last Price</th>
+                        <th>Bid</th>
+                        <th>Ask</th>
+                        <th>Volume</th>
+                        <th>Open Int.</th>
+                        <th>Implied Volatility</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in puts %}
+                        <tr> {% for j in i %}
+                            <td>{{ j }}</td>
+                        {% endfor %}</tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

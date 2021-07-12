@@ -79,6 +79,10 @@ def search(request):
             return render(request, 'optionsPF/butterfly.html', context)
         elif "condor-button" in request.POST:
             return render(request, 'optionsPF/iron_condor.html', context)
+        elif "strangle-button" in request.POST:
+            return render(request, 'optionsPF/strangle.html', context)
+        elif "straddle-button" in request.POST:
+            return render(request, 'optionsPF/straddle.html', context)
         else:
             return render(request, 'optionsPF/date.html')
     else:
@@ -144,13 +148,13 @@ def butterfly(request):
         return render(request, 'optionsPF/home.html')
 
 
-def create_collapsible_button_tag(date, low, mid, high, strategy):
+def create_collapsible_button_tag(date, low, mid, high, strat):
     if type(date) == str:
         datetime_obj = datetime.strptime(str(date) + " 00:00:00", '%Y-%m-%d %H:%M:%S')
         month = datetime_obj.strftime("%B")
     else:
         month = date.strftime("%B")
-    return month + f" {low}:{mid}:{high} " + strategy
+    return month + f" {low}:{mid}:{high} " + strat
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -255,9 +259,9 @@ def portfolio(request):
                     return render(request, 'optionsPF/portfolio.html')
 
 
-def retrieve_butterfly_contracts(strategies):
+def retrieve_butterfly_contracts(portfolio_strategies):
     context = {}
-    for key, value in strategies.items():
+    for key, value in portfolio_strategies.items():
         for k, v in value.items():
             if k == 'id':
                 butterfly_object = ButterflySpread.objects.get(pk=v)
@@ -267,7 +271,6 @@ def retrieve_butterfly_contracts(strategies):
 
                 get_option_chain(ticker=low_contract['ticker'], date=str(low_contract["expiry_date"]))
                 current_low_strike_contract_price = low_contract.pop("current_low_strike_contract_price")
-                print(current_low_strike_contract_price - low_contract["low_strike_contract_price"])
                 current_mid_strike_contract_price = mid_contract.pop("current_mid_strike_contract_price")
                 current_high_strike_contract_price = high_contract.pop("current_high_strike_contract_price")
                 low_contract["Contract Value"] = '$' + str(float((current_low_strike_contract_price
