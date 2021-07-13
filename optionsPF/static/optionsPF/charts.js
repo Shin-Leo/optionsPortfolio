@@ -518,6 +518,8 @@ function updateChart() {
     let id = this.attributes.id.value
     if (id === "short-call-butterfly") {
         butterflyChart.config.data = dataShortCallButterfly;
+        console.log(document.querySelector("#form-table > div > div > div:nth-child(1) > div > div.card-body > h6"))
+        document.querySelector("#form-table > div > div > div:nth-child(1) > div > div.card-body > h6").innerHTML = "Short Call Butterfly Spread"
         butterflyChart.update()
     } else if (id === "long-put-butterfly") {
 
@@ -525,6 +527,7 @@ function updateChart() {
 
     } else if ( id === "long-call-butterfly") {
         butterflyChart.config.data = dataLongCallButterfly;
+        document.querySelector("#form-table > div > div > div:nth-child(1) > div > div.card-body > h6").innerHTML = "Long Call Butterfly Spread"
         butterflyChart.update()
     } else if (id === "short-strangle") {
         strangleChart.config.data = dataShortStrangle;

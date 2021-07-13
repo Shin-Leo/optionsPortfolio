@@ -61,7 +61,7 @@
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="navbar-brand" href="portfolio" id="portfolio-authenticated">
+                        <a class="navbar-brand" href="portfolio/" id="portfolio-authenticated">
                             <img src="/static/optionsPF/portfolio-icon.svg" alt="" width="20" height="20"
                                  class="d-inline-block align-text-top">
                             <span></span> Portfolio
@@ -69,7 +69,7 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="navbar-brand " href="/login" id="portfolio-unauthenticated"
+                        <a class="navbar-brand " href="login" id="portfolio-unauthenticated"
                            onclick="add_unauthenticated_info()">
                             <img src="/static/optionsPF/portfolio-icon.svg" alt="" width="20" height="20"
                                  class="d-inline-block align-text-top">
