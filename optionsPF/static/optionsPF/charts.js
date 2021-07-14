@@ -131,9 +131,8 @@ const dataShortCondor = {
                 radius: 0
 
         }],
-}
-
-;const dataBullCallVertical = {
+};
+const dataBullCallVertical = {
     labels: labels,
     datasets: [
         {

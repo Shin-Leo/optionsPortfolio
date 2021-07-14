@@ -237,20 +237,30 @@ def portfolio(request):
                         try:
                             options_chain = get_option_chain(ticker,
                                                              date.strftime("%Y-%m-%d"))
-                            low_contract_price = 0
-                            mid_contract_price = 0
-                            high_contract_price = 0
-                            for calls in options_chain:
-                                for row in calls:
-                                    if row[0] == value[0]['low_strike_contract_price']:
-                                        low_contract_price = row[1]
-                                    elif row[0] == value[1]['mid_strike_contract_price']:
-                                        mid_contract_price = row[1]
-                                    elif row[0] == value[2]['high_strike_contract_price']:
-                                        high_contract_price = row[1]
+                            low_contract_price = 0.0
+                            mid_contract_price = 0.0
+                            high_contract_price = 0.0
+                            calls = options_chain[0]
+                            for row in calls:
+                                if row[0] == value[0]['lower_strike']:
+                                    low_contract_price = row[1]
+                                elif row[0] == value[1]['midpoint_strike']:
+                                    mid_contract_price = row[1]
+                                elif row[0] == value[2]['upper_strike']:
+                                    high_contract_price = row[1]
                             value[0]["current_low_strike_contract_price"] = low_contract_price
                             value[1]["current_mid_strike_contract_price"] = mid_contract_price
                             value[2]["current_high_strike_contract_price"] = high_contract_price
+                            stored_strike_price = float(value[0]["low_strike_contract_price"])
+                            print(stored_strike_price, low_contract_price)
+                            value[0]["low_percentage_change"] = float((low_contract_price -
+                                                                       stored_strike_price) / stored_strike_price).__round__(2)
+                            stored_strike_price = float(value[1]["mid_strike_contract_price"])
+                            value[1]["mid_percentage_change"] = float((mid_contract_price -
+                                                                       stored_strike_price) / stored_strike_price).__round__(2)
+                            stored_strike_price = float(value[2]["high_strike_contract_price"])
+                            value[2]["high_percentage_change"] = float((high_contract_price -
+                                                                        stored_strike_price) / stored_strike_price).__round__(2)
                         except ValueError:
                             del context[key]
                             break
