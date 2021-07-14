@@ -44,6 +44,14 @@
             transition: max-height 0.2s ease-out;
             background-color: #f1f1f1;
         }
+
+        #positive-change {
+            color: green;
+        }
+
+        #negative-change {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -68,7 +76,27 @@
                 {% for array in value %}
                     <tr>
                         {% for k, v in array.items %}
-                            <td>{{ v }}</td>
+                            {% if k == "low_percentage_change" %}
+                                {% if v > 0 %}
+                                    <td id="positive-change"> {{ v }}% </td>
+                                {% else %}
+                                    <td id="negative-change"> {{ v }}% </td>
+                                {% endif %}
+                            {% elif k == "mid_percentage_change" %}
+                                {% if v > 0 %}
+                                    <td id="positive-change"> {{ v }}%</td>
+                                {% else %}
+                                    <td id="negative-change"> {{ v }}% </td>
+                                {% endif %}
+                            {% elif k == "high_percentage_change" %}
+                                {% if v > 0 %}
+                                    <td id="positive-change"> {{ v }}% </td>
+                                {% else %}
+                                    <td id="negative-cange"> {{ v }}% </td>
+                                {% endif %}
+                            {% else %}
+                                <td>{{ v }}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                 {% endfor %}
@@ -76,7 +104,7 @@
             </table>
         </div>
     {% endfor %}
-            <button class="btn btn-secondary" onclick="location.href = '/'">Add A Strategy</button>
+    <button class="btn btn-secondary" onclick="location.href = '/'">Add A Strategy</button>
 {% endblock %}
 <script>
     var coll = document.getElementsByClassName("collapsible");

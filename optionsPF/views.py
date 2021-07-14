@@ -296,7 +296,6 @@ def retrieve_butterfly_contracts(portfolio_strategies):
                 high_contract["high_percentage_change"] = (current_high_strike_contract_price - high_contract[
                     "high_strike_contract_price"]) / high_contract["high_strike_contract_price"]
                 tag = butterfly_object.return_collapsible_tag()
-                print(mid_contract["mid_percentage_change"])
                 context.update({tag: [low_contract, mid_contract, high_contract]})
                 break
     return context
