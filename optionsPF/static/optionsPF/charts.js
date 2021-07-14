@@ -2,6 +2,7 @@ let butterfly = document.getElementById('butterfly').getContext('2d');
 let condor = document.getElementById('condor').getContext('2d');
 let strangle= document.getElementById('strangle').getContext('2d');
 let straddle = document.getElementById('straddle').getContext('2d');
+let vertical = document.getElementById('vertical').getContext('2d');
 
 let green = butterfly.createLinearGradient(0, 0, 0, 300);
 green.addColorStop(1, 'rgba(100, 100, 0,0)');
@@ -130,7 +131,62 @@ const dataShortCondor = {
                 radius: 0
 
         }],
+}
+
+;const dataBullCallVertical = {
+    labels: labels,
+    datasets: [
+        {
+            label: 'Bull Call Vertical Spread',
+            backgroundColor: 'rgb(73,114,126)',
+            borderColor: 'rgb(85,117,159)',
+            data: [-30, -30, -30, -15, 0, 15, 30, 30, 30],
+            fill: false,
+                radius: 0
+
+        }],
 };
+const dataBullPutVertical = {
+    labels: labels,
+    datasets: [
+        {
+            label: 'Bull Put Vertical Spread',
+            backgroundColor: 'rgb(73,114,126)',
+            borderColor: 'rgb(85,117,159)',
+            data: [30, 30, 30, 15, 0, -15,-30,-30, -30],
+            fill: false,
+                radius: 0
+
+        }],
+};
+const dataBearCallVertical = {
+    labels: labels,
+    datasets: [
+        {
+            label: 'Bear Call Vertical Spread',
+            backgroundColor: 'rgb(73,114,126)',
+            borderColor: 'rgb(85,117,159)',
+            data: [-30, -30, -30, -15, 0, 15, 30, 30, 30],
+            fill: false,
+                radius: 0
+
+        }],
+};
+const dataBearPutVertical = {
+    labels: labels,
+    datasets: [
+        {
+            label: 'Bear Put Vertical Spread',
+            backgroundColor: 'rgb(73,114,126)',
+            borderColor: 'rgb(85,117,159)',
+            data: [30, 30, 30, 15, 0, -15,-30,-30, -30],
+            fill: false,
+                radius: 0
+
+        }],
+};
+
+
 const butterflyConfig = {
     type: 'line',
     data: dataLongCallButterfly,
@@ -474,6 +530,92 @@ const straddleConfig = {
          },
     }
 }
+const verticalConfig = {
+    type: 'line',
+    data: dataBullCallVertical,
+    options: {
+        plugins: {
+            autocolors: false,
+            annotation: {
+                annotations: {
+                    line1: {
+                        type: 'line',
+                        yMin: 0,
+                        yMax: 0,
+                        borderColor: 'rgb(145,160,160)',
+                        borderWidth: 2,
+                    }
+                }
+            },
+            id: 'myEventCatcher',
+            events: ['hover'],
+        legend: {
+            display: false
+         },
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: "underlying price"
+
+                },
+                grid: {
+                    display: false
+                }
+                ,
+                ticks: {
+                    major: {
+                        enabled: true
+                    },
+                    display: true
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'profit / loss'
+
+                },
+                ticks: {
+                    callback: function (val) {
+                        return val === 0 ? this.getLabelForValue(val) : " ";
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+        },
+        onHover: (e, activeElements) => {
+            if (e.type !== 'mouseout') {
+                let chartFill = verticalChart.config._config.data.datasets[0]
+                chartFill.fill = {
+                    target: 'origin',
+                    above: green,
+                    below: red,
+                }
+                verticalChart.update()
+                setTimeout(function () {
+                    fn(chartFill);
+                }, 500)
+
+                function fn(chartFill) {
+                    chartFill.fill = false
+                    verticalChart.update()
+                }
+
+            }
+        },
+        legend: {
+            display: false
+         },
+    }
+}
 
 let butterflyChart = new Chart(
     butterfly,
@@ -494,6 +636,11 @@ let straddleChart = new Chart(
     straddleConfig
 );
 
+let verticalChart = new Chart(
+    vertical,
+    verticalConfig
+)
+
 let lcbButton = document.getElementById("long-call-butterfly")
 let scbButton = document.getElementById("short-call-butterfly")
 let longStrangleButton = document.getElementById("long-strangle")
@@ -502,6 +649,10 @@ let longCondorButton = document.getElementById("long-condor")
 let shortCondorButton = document.getElementById("short-condor")
 let longStraddleButton = document.getElementById("long-straddle")
 let shortStraddleButton = document.getElementById("short-straddle")
+let bullCallButton = document.getElementById("bull-call")
+let bullPutButton = document.getElementById("bull-put")
+let bearCallButton = document.getElementById("bear-call")
+let bearPutButton = document.getElementById("bear-put")
 
 
 lcbButton.addEventListener('click', updateChart)
@@ -512,6 +663,10 @@ longCondorButton.addEventListener('click', updateChart)
 shortCondorButton.addEventListener('click', updateChart)
 longStraddleButton.addEventListener('click', updateChart)
 shortStraddleButton.addEventListener('click', updateChart)
+bullCallButton.addEventListener('click', updateChart)
+bullPutButton.addEventListener('click', updateChart)
+bearCallButton.addEventListener('click', updateChart)
+bearPutButton.addEventListener('click', updateChart)
 
 function updateChart() {
     console.log(this.attributes.id.value)
@@ -547,6 +702,18 @@ function updateChart() {
     } else if (id === "short-straddle") {
         straddleChart.config.data = dataShortStraddle;
         straddleChart.update()
+    }else if (id === "bull-call") {
+        verticalChart.config.data = dataBullCallVertical;
+        verticalChart.update()
+    }else if (id === "bull-put") {
+        verticalChart.config.data = dataBullPutVertical;
+        verticalChart.update()
+    }else if (id === "bear-call") {
+        verticalChart.config.data = dataBearCallVertical;
+        verticalChart.update()
+    }else if (id === "bear-put") {
+        verticalChart.config.data = dataBearPutVertical;
+        verticalChart.update()
     }
 }
 
