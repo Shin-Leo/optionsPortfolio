@@ -229,7 +229,6 @@ def portfolio(request):
                     retrieved_portfolio.strategies = json_attributes
                     retrieved_portfolio.save()
                     context = retrieve_butterfly_contracts(existing_strategies)
-
                     for key, value in context.items():
                         ticker = value[0]["ticker"]
                         date = value[0]["expiry_date"]
@@ -252,15 +251,30 @@ def portfolio(request):
                             value[1]["current_mid_strike_contract_price"] = mid_contract_price
                             value[2]["current_high_strike_contract_price"] = high_contract_price
                             stored_strike_price = float(value[0]["low_strike_contract_price"])
-                            print(stored_strike_price, low_contract_price)
                             value[0]["low_percentage_change"] = float((low_contract_price -
-                                                                       stored_strike_price) / stored_strike_price).__round__(2)
+                                                                       stored_strike_price) / stored_strike_price).__round__(
+                                2)
+                            value[0]["low_unrealized"] = float((low_contract_price -
+                                                                       stored_strike_price) * value[0]["contract_size"]).__round__(
+                                2)
                             stored_strike_price = float(value[1]["mid_strike_contract_price"])
-                            value[1]["mid_percentage_change"] = float((mid_contract_price -
-                                                                       stored_strike_price) / stored_strike_price).__round__(2)
+                            low_pl = float((mid_contract_price -
+                                                                       stored_strike_price) * value[0]["contract_size"]).__round__(
+                                2)
+
+                            mid_pl = float((mid_contract_price -
+                                                                       stored_strike_price) / stored_strike_price).__round__(
+                                2)
                             stored_strike_price = float(value[2]["high_strike_contract_price"])
+                            high_pl = float((high_contract_price -
+                                                                       stored_strike_price) * value[0]["contract_size"]).__round__(
+                                2)
                             value[2]["high_percentage_change"] = float((high_contract_price -
-                                                                        stored_strike_price) / stored_strike_price).__round__(2)
+                                                                        stored_strike_price) / stored_strike_price).__round__(
+                                2)
+                            total_pl = "$" + str(low_pl + mid_pl + high_pl)
+                            key += total_pl
+                            print(key)
                         except ValueError:
                             del context[key]
                             break
@@ -284,11 +298,14 @@ def retrieve_butterfly_contracts(portfolio_strategies):
                 current_mid_strike_contract_price = mid_contract.pop("current_mid_strike_contract_price")
                 current_high_strike_contract_price = high_contract.pop("current_high_strike_contract_price")
                 low_contract["Contract Value"] = '$' + str(float((current_low_strike_contract_price
-                                                                  * low_contract['contract_size'])) * 100)
+                                                                  * low_contract['contract_size']).__round__(2) * 100))
                 mid_contract["Contract Value"] = '$' + str(float((current_mid_strike_contract_price
-                                                                  * mid_contract['contract_size'])) * 100)
+                                                                  * mid_contract['contract_size']).__round__(2) * 100))
                 high_contract["Contract Value"] = '$' + str((float((current_high_strike_contract_price
-                                                                    * high_contract['contract_size']))) * 100)
+                                                                    * high_contract['contract_size'])).__round__(
+                    2) * 100))
+                print(current_low_strike_contract_price)
+                print(low_contract["low_strike_contract_price"])
                 low_contract["low_percentage_change"] = (current_low_strike_contract_price - low_contract[
                     "low_strike_contract_price"]) / low_contract["low_strike_contract_price"]
                 mid_contract["mid_percentage_change"] = (current_mid_strike_contract_price - mid_contract[

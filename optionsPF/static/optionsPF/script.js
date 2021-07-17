@@ -20,7 +20,6 @@ function get_last_price() {
                 let result = document.getElementById("high-selected-last-price")
                 result.attributes[3].value = last_price
             }
-
         }
     }
 }

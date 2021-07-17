@@ -70,6 +70,7 @@
                     <th>Ticker</th>
                     <th>Percentage Change</th>
                     <th>Contract Value</th>
+                    <th>Current Price</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -92,7 +93,7 @@
                                 {% if v > 0 %}
                                     <td id="positive-change"> {{ v }}% </td>
                                 {% else %}
-                                    <td id="negative-cange"> {{ v }}% </td>
+                                    <td id="negative-change"> {{ v }}% </td>
                                 {% endif %}
                             {% else %}
                                 <td>{{ v }}</td>
@@ -109,7 +110,6 @@
 <script>
     var coll = document.getElementsByClassName("collapsible");
     var i;
-
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
