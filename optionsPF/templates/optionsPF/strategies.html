@@ -7,32 +7,71 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script type="module" src="/static/optionsPF/charts.js"></script>
     <style>
         .navbar {
             margin-left: 10px;
         }
 
-        html {
-            height: 100%;
+        html,
+        body {
+            height: 90%
         }
 
-        body {
-            height: 100%;
+        .container-fluid {
+            height: 100%
+        }
+
+        .row {
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            align-content: center;
+
+        }
+
+        #body-padding-top {
+            height: 22%;
+        }
+
+        #form-table > div > div {
+            width: 100%;
         }
 
         .navbar {
             border-bottom: 2px solid #3f4b5b;
         }
 
+        #center-col {
+            width: 100%;
+        }
+
+        .col {
+            align-items: center;
+        }
+
+        #center-col > div {
+            min-width: 1000px;
+        }
+
+        div#left-col, div#right-col {
+            max-width: 5%;
+        }
+
         #form-table {
             height: 85%;
         }
-
         .card {
-            height: 30rem;
+            height: 70%;
+            width: 28%;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
         }
 
         .card-text {
@@ -40,48 +79,14 @@
             padding-top: 20px;
         }
 
-        @media (max-width: 576px) {
-            .xs {
-                color: red;
-                font-weight: bold;
-            }
-        }
-
-        /* Small devices (landscape phones, 576px and up) */
-        @media (min-width: 576px) and (max-width: 768px) {
-            .sm {
-                color: red;
-                font-weight: bold;
-            }
-        }
-
-        /* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
-        @media (min-width: 768px) and (max-width: 992px) {
-            .md {
-                color: red;
-                font-weight: bold;
-            }
-        }
-
-        /* Large devices (desktops, 992px and up) */
-        @media (min-width: 992px) and (max-width: 1200px) {
-            .lg {
-                color: red;
-                font-weight: bold;
-            }
-        }
-
-        /* Extra large devices (large desktops, 1200px and up) */
-        @media (min-width: 1200px) {
-            .xl {
-                color: red;
-                font-weight: bold;
-            }
+        .card-button {
+            margin: 1px;
         }
 
     </style>
 </head>
 <body>
+
 <nav class="navbar navbar-light navbar-expand-md bg-faded">
     <div class="container-fluid">
         <a href="/" class="navbar-brand d-flex w-90 mr-auto">Options Portfolio Builder</a>
@@ -121,171 +126,172 @@
                 </li>
             {% endif %}
         </ul>
-
     </div>
 </nav>
 
-
 <form method="POST" action="/search/" id="form-table">
     {% csrf_token %}
-    <div class="container">
-
-        <div class="row">
-            <div class="col mb-4">
-                <div class="card mx-lg-5 " style="width: 25rem;">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="long-call-butterfly">Long
-                                    Call
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="short-call-butterfly">Short
-                                    Call
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="short-call-butterfly">Long
-                                    Put
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="short-call-butterfly">Short
-                                    Put
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="card chart-container" style="position: relative; height:26vh">
-                            <canvas id="butterfly"></canvas>
+    <div class="container-fluid">
+        <div class="row" id="body-padding-top"></div>
+        <div class="h-100 w-100 row">
+            <div class="col" id="left-col"></div>
+            <div class="col" id="center-col">
+                <div class="h-100 w-90 row">
+                    <div class="card mx-lg-5 ">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="long-call-butterfly">
+                                        Long
+                                        Call
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="short-call-butterfly">
+                                        Short
+                                        Call
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="short-call-butterfly">
+                                        Long
+                                        Put
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="short-call-butterfly">
+                                        Short
+                                        Put
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
-                        <h6 class="card-title">Long Call Butterfly Spread</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the
-                            bulk
-                            of
-                            the card's content.</p>
-                        <button type="submit" class="btn btn-primary" name="butterfly-button">Select</button>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="butterfly"></canvas>
+                            </div>
+                            <h6 class="card-title">Long Call Butterfly Spread</h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the
+                                bulk
+                                of
+                                the card's content.</p>
+                            <button type="submit" class="btn btn-primary" name="butterfly-button">Select</button>
+                        </div>
                     </div>
+                    <div class="card mx-lg-5">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="long-condor">Long Call
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="short-condor">Short Call
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="condor"></canvas>
+                            </div>
+                            <h5 class="card-title">Iron Condor</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of
+                                the card's content.</p>
+                            <button type="submit" class="btn btn-primary" name="condor-button">Select</button>
+                        </div>
+                    </div>
+                    <div class="card mx-lg-5 ">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button"
+                                            id="long-strangle">Long
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button"
+                                            id="short-strangle">Short
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="strangle"></canvas>
+                            </div>
+                            <h5 class="card-title">Strangle</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                                of
+                                the card's content.</p>
+                            <button type="submit" class="btn btn-primary" name="strangle-button">Select</button>
+                        </div>
+                    </div>
+                    <div class="card mx-lg-5">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="long-straddle">Long
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="short-straddle">Short
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="straddle"></canvas>
+                            </div>
+                            <h6 class="card-title">Straddle</h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the
+                                bulk
+                                of
+                                the card's content.</p>
+                            <button type="submit" class="btn btn-primary" name="straddle-button">Select</button>
+                        </div>
+                    </div>
+                    <div class="card mx-lg-5">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="bull-call">Bull Call
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="bull-put">Bull Put
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="bear-call">Bear Call
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button type="button" class="btn btn-outline-secondary card-button" id="bear-put">Bear Put
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <canvas id="vertical"></canvas>
+                            </div>
+                            <h6 class="card-title">Vertical Spread</h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the
+                                bulk
+                                of
+                                the card's content.</p>
+                            <button type="submit" class="btn btn-primary" name="vertical-button">Select</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="selected-ticker" value={{ ticker }}>
+                    <input type="hidden" name="selected-expiry" value={{ date }}>
+                    {% csrf_token %}
                 </div>
             </div>
-            <div class="col mb-4">
-                <div class="card mx-lg-5" style="width: 25rem;">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="long-condor">Long Call
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="short-condor">Short Call
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="card chart-container" style="position: relative; height:26vh;">
-                            <canvas id="condor"></canvas>
-                        </div>
-                        <h5 class="card-title">Iron Condor</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                            of
-                            the card's content.</p>
-                        <button type="submit" class="btn btn-primary" name="condor-button">Select</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-4">
-                <div class="card mx-lg-5 " style="width: 25rem;">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="long-strangle">Long</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="short-strangle">Short
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="card chart-container" style="position: relative; height:26vh;">
-                            <canvas id="strangle"></canvas>
-                        </div>
-                        <h5 class="card-title">Strangle</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                            of
-                            the card's content.</p>
-                        <button type="submit" class="btn btn-primary" name="strangle-button">Select</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-4">
-                <div class="card mx-lg-5" style="width: 25rem;">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="long-straddle">Long</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="short-straddle">Short
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="card chart-container" style="position: relative; height:26vh">
-                            <canvas id="straddle"></canvas>
-                        </div>
-                        <h6 class="card-title">Straddle</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the
-                            bulk
-                            of
-                            the card's content.</p>
-                        <button type="submit" class="btn btn-primary" name="straddle-button">Select</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col mb-4">
-                <div class="card mx-lg-5" style="width: 25rem;">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="bull-call">Bull Call
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="bull-put">Bull Put</button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="bear-call">Bear Call
-                                </button>
-                            </li>
-                            <li class="nav-item">
-                                <button type="button" class="btn btn-outline-secondary" id="bear-put">Bear Put</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body">
-                        <div class="card chart-container" style="position: relative; height:26vh">
-                            <canvas id="vertical"></canvas>
-                        </div>
-                        <h6 class="card-title">Vertical Spread</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the
-                            bulk
-                            of
-                            the card's content.</p>
-                        <button type="submit" class="btn btn-primary" name="vertical-button">Select</button>
-                    </div>
-                </div>
-            </div>
-            <div>
-            </div>
-            <input type="hidden" name="selected-ticker" value={{ ticker }}>
-            <input type="hidden" name="selected-expiry" value={{ date }}>
-            {% csrf_token %}
+            <div class="col" id="right-col"></div>
         </div>
     </div>
 </form>
