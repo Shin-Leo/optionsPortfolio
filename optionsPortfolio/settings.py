@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 import django_heroku
 import dj_database_url
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -84,7 +85,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'Sm56712345',
-        'HOST': 'localhost',
+        'HOST': '',
         'PORT': '',
     }
 }
@@ -123,17 +124,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'static'))
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
-STATIC_URL = '/static/'
-if not DEBUG:
-    STATIC_ROOT = ''
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static/'),
+    os.path.join(BASE_DIR, 'checkstatic/static/')
 ]
+STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "login_success"
@@ -145,6 +140,4 @@ LOGOUT_REDIRECT_URL = "/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
-
-import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
