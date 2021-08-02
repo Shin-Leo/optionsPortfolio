@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'register',
     'crispy_forms',
+    'django_heroku',
 ]
 
 MIDDLEWARE = [
