@@ -9,11 +9,11 @@ https://options-portfolio.herokuapp.com/
 
 * ### Call/Put Tables ###
     * Options chains were given as data frames from [yfinance](https://github.com/ranaroussi/yfinance) and were rendered dynamically using django template tags
-      [](/tables.png)
+      [](https://github.com/Shin-Leo/optionsPortfolio/blob/master/tables.png?raw=true)
 
 * ### Graphing ###
     * Pay-off diagrams were made with [Chart.js](https://github.com/chartjs/Chart.js)
-    [](/graphs.png)
+    [](https://github.com/Shin-Leo/optionsPortfolio/blob/master/graphs.png?raw=true)
 
 * ### Database ###
     * Uses postgreSQL and django models to store portfolio data
