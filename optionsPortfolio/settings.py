@@ -126,7 +126,7 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'checkstatic/static/')
+    os.path.join(BASE_DIR, 'optionsPF/static/')
 ]
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = "bootstrap4"
