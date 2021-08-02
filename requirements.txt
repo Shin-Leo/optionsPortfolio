@@ -20,7 +20,7 @@ multitasking==0.0.9
 numpy==1.20.3
 pandas==1.2.4
 prompt-toolkit==3.0.18
-psycopg2==2.8.6
+psycopg2==2.9.1
 pycodestyle==2.7.0
 pycparser==2.20
 python-dateutil==2.8.1
