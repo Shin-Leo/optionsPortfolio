@@ -81,12 +81,8 @@ WSGI_APPLICATION = 'optionsPortfolio.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+DATABASES = {'default': dj_database_url.parse('postgres://enacslejbpchtb:612d87c1fec9378688569bed33c32f7f10612b842d4501ee990fdfa4b7b518f7@ec2-54-145-185-178.compute-1.amazonaws.com:5432/deh9lqc76323o1')}
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=dj_database_url.config('DATABASE_URL')
-    )
-}
 
 # Password validation
 # https://docs.
